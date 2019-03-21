@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/pic" android:title="Adicionar imagem"/>
+    <item android:id="@+id/video" android:title="Adicionar Video"/>
+    <item android:id="@+id/audio" android:title="Adicionar Audio"/>
+    <item android:id="@+id/doc" android:title="Adicionar Documento"/>
+
+
+
+</menu>

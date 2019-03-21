@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/gradient">
+
+
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:id="@+id/logo"
+        android:layout_marginTop="75dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/logo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Desenvolvido por: \n          Grupo 4"
+        android:id="@+id/textView"
+        android:textColor="#ffffff"
+        android:layout_marginTop="350dp"
+        android:layout_below="@+id/btn_Login"
+        android:layout_toEndOf="@+id/imageView2"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
