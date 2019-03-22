@@ -6,10 +6,12 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +21,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -326,6 +335,33 @@ public class PostDeals {
                             container.addView(itemView);
                             itemViews[0] = itemView;
                         }
+                        else
+                        {
+                            inflater = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            final View itemView = inflater.inflate(R.layout.postarquivos, container, false);
+                            final TextView name = (TextView) itemView.findViewById(R.id.nomeArquivo);
+                            final ImageView pic = (ImageView) itemView.findViewById(R.id.doc);
+                            final String nome = (imagess[position]);
+                            pic.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    new DownloadFileFromURL("http://192.168.15.17/pictures/" + imagess[position], activity).execute();
+                                }
+                            });
+                            Thread t = new Thread()
+                            {
+                                @Override
+                                public void run() {
+                                    name.setText(nome);
+                                    pic.setImageResource(R.drawable.ico_doc);
+                                }
+                            };
+                            t.run();
+                            //Toast.makeText(getApplicationContext(), "A", Toast.LENGTH_LONG).show();
+                            container.addView(itemView);
+                            itemViews[0] = itemView;
+
+                        }
                     }
                     catch (Exception e){}
                 }
@@ -333,6 +369,98 @@ public class PostDeals {
                 threadd.run();
                 return itemViews[0];
         }
+    }
+
+    static class DownloadFileFromURL extends AsyncTask<String, String, String> {
+
+        String x;
+        String y;
+        Activity activit;
+        public DownloadFileFromURL(String s, Activity activity) {
+            x = s;
+            activit = activity;
+        }
+
+        /**
+         * Before starting background thread Show Progress Bar Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            y = x.substring(x.lastIndexOf("/"), x.length());
+        }
+
+        /**
+         * Downloading file in background thread
+         * */
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try {
+                URL url = new URL(x);
+                URLConnection conection = url.openConnection();
+                conection.connect();
+
+                // this will be useful so that you can show a tipical 0-100%
+                // progress bar
+                int lenghtOfFile = conection.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(url.openStream(),
+                        8192);
+
+                // Output stream
+                OutputStream output = new FileOutputStream(Environment
+                        .getExternalStorageDirectory().toString()
+                        + "/Download/" + y);
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+
+            return null;
+        }
+
+        /**
+         * Updating progress bar
+         * */
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        @Override
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after the file was downloaded
+            System.out.println("Foi");
+            Toast.makeText(activit, "Arquivo baixado com sucesso, cheque a pasta Downloads", Toast.LENGTH_LONG).show();
+        }
+
+
+
     }
 
 
