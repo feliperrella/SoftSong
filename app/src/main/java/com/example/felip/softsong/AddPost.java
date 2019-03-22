@@ -196,7 +196,7 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                                 @Override
                                 public void run() {
                                     try {
-                                        Glide.with(activity.getApplicationContext()).load(imagess.get(position)).into(images);
+                                        Glide.with(activity.getApplicationContext()).load( (imagess.get(position))).into(images);
                                     } catch (Exception e) {
                                         //Picasso.with(activity.getApplicationContext()).load(R.drawable.ops).placeholder(R.drawable.ops).into(images);
                                     }

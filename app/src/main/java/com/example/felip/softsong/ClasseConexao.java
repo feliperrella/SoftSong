@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import static java.sql.DriverManager.getConnection;
 
 public class ClasseConexao {
-public static String ip = "179.97.179.63";
-//public static String ip = "192.168.15.17";
+//public static String ip = "179.97.179.63";
+public static String ip = "192.168.15.17";
 
     @SuppressLint("NewApi")
     public Connection CONN() throws ClassNotFoundException {

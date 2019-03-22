@@ -26,6 +26,7 @@ import com.bumptech.glide.Glide;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class PostDeals {
     public static class GetMyPosts extends AsyncTask<String, String, String> {
@@ -59,33 +60,21 @@ public class PostDeals {
                      Statement stmt = con.createStatement();
                      ResultSet rs = stmt.executeQuery(query);
 
-                    String tit = "";
-                    String leg = "";
-                    String dat = "";
-                    String idPost = "";
-                    String nome = "";
-                    String curt = "";
+                    curtir.clear();
+                    nomes.clear();
+                    id.clear();
+                    titulos.clear();
+                    legenda.clear();
+                    data.clear();
                     while(rs.next())
                     {
-                        curt = curt + rs.getString("(Select count(*) from tblCurtir where ID_Post = post.IDPost)") + ",";
-                        nome = nome + rs.getString("username") + ",";
-                        idPost = idPost + rs.getString("IDPost") + ",";
-                        tit =  tit + rs.getString("titulo") + ",";
-                        leg = leg + rs.getString("legenda") + ",";
-                        dat = dat + rs.getString("data_horario") + ";";
+                        curtir.add(rs.getString("(Select count(*) from tblCurtir where ID_Post = post.IDPost)"));
+                        nomes.add(rs.getString("username") + "");
+                        id.add(rs.getString("IDPost"));
+                        titulos.add(rs.getString("titulo"));
+                        legenda.add(rs.getString("legenda"));
+                        data.add(rs.getString("data_horario"));
                     }
-                    curt = curt.substring(0, curt.length() - 1);
-                    nome = nome.substring(0, nome.length() - 1);
-                    idPost = idPost.substring(0, idPost.length() - 1);
-                    tit = tit.substring(0, tit.length() - 1);
-                    leg = leg.substring(0, leg.length() - 1);
-                    dat = dat.substring(0, dat.length() - 1);
-                    curtir = curt.split(",");
-                    id = idPost.split(",");
-                    titulos = tit.split(",");
-                    legenda = leg.split(",");
-                    data = dat.split(";");
-                    nomes = nome.split(",");
                     //rs = null;
                     //isSuccess = true;
 
@@ -117,7 +106,7 @@ public class PostDeals {
         @Override
         public int getCount() {
             try {
-                return id.length;
+                return id.size();
             }
             catch (Exception e){return 0;}
         }
@@ -138,12 +127,12 @@ public class PostDeals {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View vieww = inflater.inflate(R.layout.post, null);
                 final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
-                new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id[i] + ")", pub, context).execute();
+                new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
                 TextView tit = (TextView) vieww.findViewById(R.id.nameee);
                 TextView desc = (TextView) vieww.findViewById(R.id.descric);
                 TextView hor = (TextView) vieww.findViewById(R.id.horarior);
                 TextView nlikes = (TextView) vieww.findViewById(R.id.nlike);
-                nlikes.setText(curtir[i]);
+                nlikes.setText(curtir.get(i));
             //new likePost(nlikes, "Carregar", id[i]).execute();
             ImageView com = (ImageView) vieww.findViewById(R.id.commentpic);
                 com.setImageResource(R.drawable.comment);
@@ -163,9 +152,9 @@ public class PostDeals {
                     }
                 });
                 try {
-                    tit.setText(nomes[i]);
-                    desc.setText(nomes[i] + ": " + legenda[i]);
-                    hor.setText(data[i]);
+                    tit.setText(nomes.get(i));
+                    desc.setText(nomes.get(i) + ": " + legenda.get(i));
+                    hor.setText(data.get(i));
                     vieww.notify();
                 } catch (Exception e) {
                 }
@@ -266,7 +255,7 @@ public class PostDeals {
                                 @Override
                                 public void run() {
                                     try {
-                                        Glide.with(activity.getApplicationContext()).load("http://192.168.15.17/pictures/" + imagess[position]).into(images);
+                                        Glide.with(activity.getApplicationContext()).load("http://192.168.15.17/pictures/" + imagess[position]).override(600, 200).into(images);
                                     } catch (Exception e) {
                                         //Picasso.with(activity.getApplicationContext()).load(R.drawable.ops).placeholder(R.drawable.ops).into(images);
                                     }
@@ -318,10 +307,22 @@ public class PostDeals {
                         else if(a[0].contains("mp3") || a[0].contains("wav") || a[0].contains("m4a"))
                         {
                             inflater = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            final View itemView = inflater.inflate(R.layout.postvideo, container, false);
+                            final View itemView = inflater.inflate(R.layout.postaudio, container, false);
                             TextView audio = (TextView) itemView.findViewById(R.id.nomeAudio);
-                            audio.setText("http://192.168.15.17/pictures/" + imagess[position].substring(("http://192.168.15.17/pictures/" + imagess[position]).lastIndexOf("/") + 1));
+                            final ImageView play = (ImageView) itemView.findViewById(R.id.playbutton);
+                            audio.setText(imagess[position]);
                             final MediaPlayer mp = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://192.168.15.17/pictures/" + imagess[position]));
+                            play.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if(!mp.isPlaying()) {
+                                        mp.start();
+                                    }
+                                    else
+                                        mp.pause();
+                                }
+                            });
+
                             container.addView(itemView);
                             itemViews[0] = itemView;
                         }
@@ -336,13 +337,13 @@ public class PostDeals {
 
 
 
-    public static String[] curtir = null;
-    public static String[] nomes = null;
-    public static String[] titulos = null;
-    public static String[] legenda = null;
-    public static String[] data = null;
-    public static String[] images = null;
-    public static String[] id = null;
+    static ArrayList<String> curtir = new ArrayList<>();
+    static ArrayList<String> nomes = new ArrayList<>();
+    static ArrayList<String> titulos = new ArrayList<>();
+    static ArrayList<String> legenda = new ArrayList<>();
+    static ArrayList<String> data = new ArrayList<>();
+    static String[] images = null;
+    static ArrayList<String> id = new ArrayList<>();
     public static String count;
     static ListView posts;
 }
