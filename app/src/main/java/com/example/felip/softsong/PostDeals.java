@@ -62,12 +62,11 @@ public class PostDeals {
                 } else {
                     String query = "";
                     if(tipoquery.equals("all"))
-                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post  left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario in (Select IDSeguido from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ") group by post.IDPost DESC";
+                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post  left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario in (Select IDSeguido from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ") group by post.IDPost DESC";
                     else if(tipoquery.equals("my"))
-                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + " group by post.IDPost DESC";
+                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + " group by post.IDPost DESC";
                      else if(tipoquery.equals("spec"))
-
-                         query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = (Select IDUsuario from tblUsuario where username = '" + Search.user + "') group by post.IDPost DESC";
+                         query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,usu.caminho_imagem,post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = (Select IDUsuario from tblUsuario where username = '" + Search.user + "') group by post.IDPost DESC";
                      Statement stmt = con.createStatement();
                      ResultSet rs = stmt.executeQuery(query);
 
@@ -77,8 +76,10 @@ public class PostDeals {
                     titulos.clear();
                     legenda.clear();
                     data.clear();
+                    picture.clear();
                     while(rs.next())
                     {
+                        picture.add(rs.getString("caminho_imagem"));
                         curtir.add(rs.getString("(Select count(*) from tblCurtir where ID_Post = post.IDPost)"));
                         nomes.add(rs.getString("username") + "");
                         id.add(rs.getString("IDPost"));
@@ -139,12 +140,21 @@ public class PostDeals {
                 View vieww = inflater.inflate(R.layout.post, null);
                 final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
                 indicator = (CircleIndicator) vieww.findViewById(R.id.indicator);
-                new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
+                ImageView perfil = (ImageView) vieww.findViewById(R.id.postperfil);
+                Thread t = new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
+                    }
+                };
+                t.run();
+                Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(perfil);
                 TextView tit = (TextView) vieww.findViewById(R.id.nameee);
                 TextView desc = (TextView) vieww.findViewById(R.id.descric);
                 TextView hor = (TextView) vieww.findViewById(R.id.horarior);
                 final TextView nlikes = (TextView) vieww.findViewById(R.id.nlike);
-                nlikes.setText(curtir.get(i));
+                nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
             //new likePost(nlikes, "Carregar", id[i]).execute();
             ImageView com = (ImageView) vieww.findViewById(R.id.commentpic);
                 com.setImageResource(R.drawable.comment);
@@ -499,12 +509,12 @@ public class PostDeals {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            nlikess.setText(n);
+            nlikess.setText(Integer.parseInt(n) == 1 ? n + " curtida" : n + " curtidas");
         }
     }
 
 
-
+    static ArrayList<String> picture = new ArrayList<>();
     static ArrayList<String> curtir = new ArrayList<>();
     static ArrayList<String> nomes = new ArrayList<>();
     static ArrayList<String> titulos = new ArrayList<>();

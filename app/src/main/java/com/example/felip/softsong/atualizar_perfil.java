@@ -137,19 +137,19 @@ public class atualizar_perfil extends Activity {
                 {
                     Statement stmt = connection.createStatement();
                     String teste = "Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id","");
-                    stmt.executeUpdate("Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "', descricao='" + bio.getText() + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id",""));
                     SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
                     editor.putString("usu", String.valueOf(user.getText()));
                     editor.putString("email", String.valueOf(email.getText()));
                     editor.putString("desc", String.valueOf(bio.getText()));
-                    String[] newpath = Login_Screen.sharedPref.getString("foto_perfil", "").split("-");
-                    System.out.println(newpath[0] + file.getName());
+                    String newpath = Login_Screen.sharedPref.getString("id", "");
+                    System.out.println(newpath + file.getName());
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     image.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
                     String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-                    new HTTPServer(newpath[0] + file.getName(), encodedImage).execute();
-                    editor.putString("foto_perfil", newpath[0] + file.getName());
+                    new HTTPServer(newpath + "-" + file.getName(), encodedImage).execute();
+                    editor.putString("foto_perfil", newpath + "-" + file.getName());
                     editor.commit();
+                    stmt.executeUpdate("Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "', descricao='" + bio.getText() + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id",""));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
