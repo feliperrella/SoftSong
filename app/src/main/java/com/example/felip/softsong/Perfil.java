@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -43,7 +44,14 @@ public class Perfil extends Activity {
         new GetMyFollows().execute();
 
         //final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
-        Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
+        Thread t = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).dontAnimate().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(perfil);
+            }
+        };
+        t.run();
         new PostDeals.GetMyPosts(this, mypost, "my").execute();
         //new GetMyFollows().execute();
         extras.setOnClickListener(new View.OnClickListener() {

@@ -20,7 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -157,7 +157,7 @@ public class Search  extends Activity {
             try {
                 name.setText(nm[i]);
                 usu.setText(pe[i]);
-                Picasso.with(getApplicationContext()).load("http://192.168.15.17/pictures/%20" + ft[i]).into(per);
+                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + ft[i]).into(per);
             }
             catch (Exception e){}
             return vieww;

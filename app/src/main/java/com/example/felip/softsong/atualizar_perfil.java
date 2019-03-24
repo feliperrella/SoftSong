@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +39,7 @@ public class atualizar_perfil extends Activity {
         user = (EditText) findViewById(R.id.Auser);
         nome = (EditText) findViewById(R.id.Anome);
         senha = (EditText) findViewById(R.id.Asenha);
+        bio = (EditText) findViewById(R.id.abio);
         email = (EditText) findViewById(R.id.Aemail);
         celular = (EditText) findViewById(R.id.Acelular);
         Button update = (Button) findViewById(R.id.btnAtualizar);
@@ -106,6 +110,7 @@ public class atualizar_perfil extends Activity {
                                     senha.setText(rs.getString("senha"));
                                     email.setText(rs.getString("email"));
                                     celular.setText(rs.getString("tel"));
+                                    bio.setText(rs.getString("descricao"));
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -132,7 +137,19 @@ public class atualizar_perfil extends Activity {
                 {
                     Statement stmt = connection.createStatement();
                     String teste = "Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id","");
-                    stmt.executeUpdate("Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id",""));
+                    stmt.executeUpdate("Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "', descricao='" + bio.getText() + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id",""));
+                    SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
+                    editor.putString("usu", String.valueOf(user.getText()));
+                    editor.putString("email", String.valueOf(email.getText()));
+                    editor.putString("desc", String.valueOf(bio.getText()));
+                    String[] newpath = Login_Screen.sharedPref.getString("foto_perfil", "").split("-");
+                    System.out.println(newpath[0] + file.getName());
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    image.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+                    String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+                    new HTTPServer(newpath[0] + file.getName(), encodedImage).execute();
+                    editor.putString("foto_perfil", newpath[0] + file.getName());
+                    editor.commit();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,6 +160,7 @@ public class atualizar_perfil extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            Toast.makeText(getApplicationContext(), "Informaçoes atualizadas com sucesso", Toast.LENGTH_LONG).show();
         }
     }
     ClasseConexao conexao = new ClasseConexao();
@@ -153,5 +171,5 @@ public class atualizar_perfil extends Activity {
     static final int IMAGE_GALLEY_REQUEST = 20;
     String pictureDirectoryPath;
     ImageView perfil;
-    EditText user,nome,senha, email, celular;
+    EditText user,nome,senha, email, celular, bio;
 }

@@ -37,6 +37,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import me.relex.circleindicator.CircleIndicator;
+
 public class PostDeals {
     public static class GetMyPosts extends AsyncTask<String, String, String> {
         String message = "";
@@ -136,11 +138,12 @@ public class PostDeals {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View vieww = inflater.inflate(R.layout.post, null);
                 final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
+                indicator = (CircleIndicator) vieww.findViewById(R.id.indicator);
                 new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
                 TextView tit = (TextView) vieww.findViewById(R.id.nameee);
                 TextView desc = (TextView) vieww.findViewById(R.id.descric);
                 TextView hor = (TextView) vieww.findViewById(R.id.horarior);
-                TextView nlikes = (TextView) vieww.findViewById(R.id.nlike);
+                final TextView nlikes = (TextView) vieww.findViewById(R.id.nlike);
                 nlikes.setText(curtir.get(i));
             //new likePost(nlikes, "Carregar", id[i]).execute();
             ImageView com = (ImageView) vieww.findViewById(R.id.commentpic);
@@ -157,6 +160,8 @@ public class PostDeals {
                         if (mp.isPlaying())
                             mp.stop();
                         mp.start();
+                        String g = (id.get(i));
+                        new LikeDeslike(g, nlikes).execute();
                         //new likePost(nlikes, "", id[i]).execute();
                     }
                 });
@@ -217,7 +222,7 @@ public class PostDeals {
 
                     ViewPageadapt viewPageadapt = new ViewPageadapt((Activity) cont, images);
                     pubs.setAdapter(viewPageadapt);
-
+                    indicator.setViewPager(pubs);
         }}
 
     static class ViewPageadapt extends PagerAdapter {
@@ -463,6 +468,41 @@ public class PostDeals {
 
     }
 
+    static class LikeDeslike extends AsyncTask<String, String, String>
+    {
+        ClasseConexao conexao = new ClasseConexao();
+        String ID;
+        String n;
+        TextView nlikess;
+        public LikeDeslike(String idd, TextView nlikes) {
+            ID = idd;
+            nlikess = nlikes;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = conexao.CONN();
+                if (con != null) {
+                    String a = "Call likedeslike(" + Login_Screen.sharedPref.getString("id", "") + "," + ID + ");";
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery(a);
+                    if(rs != null && rs.next())
+                        n = rs.getString("COUNT(*)");
+                    return n;
+                }
+            }
+            catch (Exception e){}
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            nlikess.setText(n);
+        }
+    }
+
 
 
     static ArrayList<String> curtir = new ArrayList<>();
@@ -472,6 +512,7 @@ public class PostDeals {
     static ArrayList<String> data = new ArrayList<>();
     static String[] images = null;
     static ArrayList<String> id = new ArrayList<>();
+    static CircleIndicator indicator;
     public static String count;
     static ListView posts;
 }

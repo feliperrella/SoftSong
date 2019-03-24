@@ -60,7 +60,6 @@ public class Home_Screen extends Activity {
     public static String[] images;
     public static String[] id;
     ImageView plus;
-
     ListView posts;
 
 }
