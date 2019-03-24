@@ -30,7 +30,8 @@
             android:elevation="8dp"
             app:cardElevation="10dp">
 
-            <RelativeLayout
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignBottom="@+id/view1"
@@ -41,61 +42,72 @@
                     android:id="@+id/home"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/ico_post" />
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/ico_post"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/noti"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignTop="@+id/home"
-                    android:layout_marginLeft="15dp"
-                    android:layout_toEndOf="@+id/home"
-                    android:background="@drawable/ico_notification" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/ico_notification"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/home"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/search"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignTop="@+id/noti"
                     android:layout_marginLeft="15dp"
-                    android:layout_toEndOf="@+id/noti"
-                    android:background="@drawable/ico_search" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/ico_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/noti"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/mensageiro"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
-                    android:layout_toEndOf="@+id/search"
-                    android:background="@drawable/ic_send" />
+                    android:background="@drawable/ic_send"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/search"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/addpost"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="75dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_toEndOf="@+id/search"
-                    android:background="@drawable/ico_mais" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/ico_mais"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/mensageiro"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/plus"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginStart="71dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_toEndOf="@+id/mensageiro"
-                    android:background="@drawable/ico_uso" />
-            </RelativeLayout>
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/ico_uso"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/addpost"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
 

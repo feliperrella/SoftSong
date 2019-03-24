@@ -24,15 +24,18 @@
             android:layout_alignParentTop="true">
 
             <EditText
+                android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginRight="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
                 android:layout_marginLeft="70dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="0dp"
                 android:hint="Search"
-                android:id="@+id/search"
-                android:textColorHint="#ffffff"
                 android:textColor="#ffffff"
+                android:textColorHint="#ffffff"
                 android:textSize="20dp" />
 
             <ImageView

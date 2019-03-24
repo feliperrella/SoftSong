@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -52,12 +53,21 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/relativeLayout7"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
 
             <android.support.v7.widget.CardView
                 android:id="@+id/Card1"
@@ -67,42 +77,59 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginLeft="25dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="25dp"
-                android:layout_marginRight="25dp"
+                android:layout_marginEnd="8dp"
                 android:elevation="8dp"
                 app:cardCornerRadius="15dp"
-                app:cardElevation="10dp">
+                app:cardElevation="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
 
-                <RelativeLayout
+                <android.support.constraint.ConstraintLayout
                     android:id="@+id/relativeUsu"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true">
 
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="20dp"
+                        app:layout_constraintGuide_percent="0.65" />
+
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/perfil"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginRight="130dp" />
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="105dp"
-                        android:layout_marginTop="170dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="16dp"
                         android:text="Selecionar foto"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
 
-                </RelativeLayout>
+                </android.support.constraint.ConstraintLayout>
 
 
             </android.support.v7.widget.CardView>
@@ -115,12 +142,15 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="300dp"
-                android:layout_marginRight="25dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:elevation="8dp"
                 app:cardCornerRadius="15dp"
-                app:cardElevation="10dp">
+                app:cardElevation="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Card1">
 
 
                 <RelativeLayout
@@ -133,77 +163,77 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="20dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="45dp"
+                        android:layout_marginBottom="171dp"
                         android:text="User:"
                         android:textSize="25dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/Auser"
+                        android:layout_width="271dp"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginLeft="85dp"
-                        android:layout_marginTop="52dp"
-                        android:text="perrellaf"
+                        android:layout_marginTop="38dp"
+                        android:layout_marginEnd="24dp"
+                        android:textColor="#09c"
                         android:textSize="18dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="175dp"
-                        android:layout_marginTop="56dp"
-                        android:text="editar"
-                        android:textColor="#09f"
-                        android:textSize="15dp" />
-
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="20dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="90dp"
+                        android:layout_marginBottom="100dp"
                         android:text="Nome:"
                         android:textSize="25dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/Anome"
+                        android:layout_width="266dp"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/Auser"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginLeft="95dp"
-                        android:layout_marginTop="98dp"
-                        android:text="Felipe Perrella"
+                        android:layout_marginTop="27dp"
+                        android:layout_marginEnd="26dp"
+                        android:textColor="#09c"
                         android:textSize="15dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="275dp"
-                        android:layout_marginTop="102dp"
-                        android:text="editar"
-                        android:textColor="#09f"
-                        android:textSize="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="20dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="135dp"
+                        android:layout_marginBottom="41dp"
                         android:text="Senha:"
                         android:textSize="25dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <EditText
+                        android:id="@+id/Asenha"
+                        android:layout_width="260dp"
+                        android:layout_height="42dp"
+                        android:layout_alignTop="@+id/Anome"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginLeft="105dp"
-                        android:layout_marginTop="145dp"
-                        android:text="***************"
-                        android:textSize="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="275dp"
-                        android:layout_marginTop="147dp"
-                        android:text="editar"
-                        android:textColor="#09f"
+                        android:layout_marginTop="63dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="35dp"
+                        android:textColor="#09c"
                         android:textSize="15dp" />
 
 
@@ -216,16 +246,21 @@
                 android:id="@+id/Card4"
 
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="264dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="575dp"
-                android:layout_marginRight="25dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:elevation="8dp"
                 app:cardCornerRadius="15dp"
-                app:cardElevation="10dp">
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Card3">
 
 
                 <RelativeLayout
@@ -238,60 +273,72 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="20dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="45dp"
                         android:text="Email:"
                         android:textSize="25dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/Aemail"
+                        android:layout_width="290dp"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginLeft="90dp"
                         android:layout_marginTop="52dp"
-                        android:text="felipe.perrella2210@gmail.com"
+                        android:layout_marginEnd="11dp"
+                        android:textColor="#09c"
                         android:textSize="18dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="45dp"
-                        android:layout_marginTop="76dp"
-                        android:text="editar"
-                        android:textColor="#09f"
-                        android:textSize="15dp" />
-
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="20dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="105dp"
-                        android:text="Telefone:"
+                        android:layout_marginBottom="102dp"
+                        android:text="Celular:"
                         android:textSize="25dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/Acelular"
+                        android:layout_width="248dp"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginLeft="130dp"
                         android:layout_marginTop="115dp"
-                        android:text="(11) 99347 0329"
+                        android:layout_marginEnd="34dp"
+                        android:layout_marginBottom="94dp"
+                        android:textColor="#09c"
                         android:textSize="15dp" />
 
-                    <TextView
+                    <Button
+                        android:id="@+id/btnAtualizar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="275dp"
-                        android:layout_marginTop="102dp"
-                        android:text="editar"
-                        android:textColor="#09f"
-                        android:textSize="15dp" />
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="156dp"
+                        android:layout_marginEnd="151dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/button_shape"
+                        android:text="Atualizar"
+                        android:textColor="#ffffff" />
 
                 </RelativeLayout>
 
 
             </android.support.v7.widget.CardView>
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
 
