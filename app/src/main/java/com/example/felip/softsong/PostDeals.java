@@ -285,12 +285,6 @@ public class PostDeals {
                                     }
                                 }
                             };
-                            images.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Glide.with(activity.getApplicationContext()).load("http://192.168.15.17/pictures/" + imagess[position]).into(images);
-                                }
-                            });
                             thread.run();
                             container.addView(itemView);
                             itemViews[0] = itemView;
@@ -368,7 +362,7 @@ public class PostDeals {
                                 @Override
                                 public void run() {
                                     name.setText(nome);
-                                    pic.setImageResource(R.drawable.ico_doc);
+                                    //pic.setImageResource(R.drawable.ico_doc);
                                 }
                             };
                             t.run();
@@ -383,6 +377,11 @@ public class PostDeals {
             };
                 threadd.run();
                 return itemViews[0];
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            ((ViewPager) container).removeView((View) object);
         }
     }
 
