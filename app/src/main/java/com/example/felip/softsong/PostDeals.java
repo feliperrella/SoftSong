@@ -329,15 +329,23 @@ public class PostDeals {
                             TextView audio = (TextView) itemView.findViewById(R.id.nomeAudio);
                             final ImageView play = (ImageView) itemView.findViewById(R.id.playbutton);
                             audio.setText(imagess[position]);
-                            final MediaPlayer mp = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://192.168.15.17/pictures/" + imagess[position]));
+                            final MediaPlayer[] mp = new MediaPlayer[1];
+                            Thread x = new Thread(){
+                                @Override
+                                public void run() {
+                                    super.run();
+                                    mp[0] = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://192.168.15.17/pictures/" + imagess[position]));
+                                }
+                            };
+                            x.run();
                             play.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(!mp.isPlaying()) {
-                                        mp.start();
+                                    if(!mp[0].isPlaying()) {
+                                        mp[0].start();
                                     }
                                     else
-                                        mp.pause();
+                                        mp[0].pause();
                                 }
                             });
 

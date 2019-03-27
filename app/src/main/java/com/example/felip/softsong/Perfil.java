@@ -2,11 +2,11 @@ package com.example.felip.softsong;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,6 +42,18 @@ public class Perfil extends Activity {
         follows = (TextView) findViewById(R.id.follows);
         followings = (TextView) findViewById(R.id.following);
         new GetMyFollows().execute();
+        Thread x = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                WizardPagerAdapter adapter = new WizardPagerAdapter();
+                ViewPager pager = (ViewPager) findViewById(R.id.segbio);
+                pager.setAdapter(adapter);
+                TextView bio = (TextView) findViewById(R.id.txtBio);
+                bio.setText(Login_Screen.sharedPref.getString("desc",""));
+            }
+        };
+        x.run();
 
         //final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
         Thread t = new Thread(){
@@ -62,23 +74,6 @@ public class Perfil extends Activity {
             }
         });
 
-        perfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                break;
-                        }
-                    }
-                };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(Perfil.this);
-                builder.setMessage("Bio: " + Login_Screen.sharedPref.getString("desc","")).setPositiveButton("Ok", dialogClickListener).show();
-            }
-        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,6 +144,34 @@ public class Perfil extends Activity {
 
         }
     }
+
+    class WizardPagerAdapter extends PagerAdapter {
+
+        public Object instantiateItem(View collection, int position) {
+
+            int resId = 0;
+            switch (position) {
+                case 0:
+                    resId = R.id.page_one;
+                    break;
+                case 1:
+                    resId = R.id.page_two;
+                    break;
+            }
+            return findViewById(resId);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == ((View) arg1);
+        }
+    }
+
 
     ImageView perfil, extras;
     ListView mypost;

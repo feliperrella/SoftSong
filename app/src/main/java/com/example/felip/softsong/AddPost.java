@@ -50,16 +50,16 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_post);
-        Button postar = (Button) findViewById(R.id.btn_postar);
-        ImageView add = (ImageView) findViewById(R.id.addarq);
-        desc = (TextView) findViewById(R.id.desc);
+        Button postar = findViewById(R.id.btn_postar);
+        ImageView add = findViewById(R.id.addarq);
+        desc = findViewById(R.id.desc);
         postar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new post(images).execute();
             }
         });
-        viewPager = (ViewPager) findViewById(R.id.files);
+        viewPager = findViewById(R.id.files);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,20 +133,17 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                 //Uri imageUri = data.getData();
                 sftpCaminho = data.getData().getPath().substring(5);
                 file = new File(sftpCaminho);
-                try {
+            try {
 
-                    //Toast.makeText(Cadastro.this, data.getData().getPath(), Toast.LENGTH_SHORT).show();
-                    inputstream = getContentResolver().openInputStream(data.getData());
-                    image = BitmapFactory.decodeStream(inputstream);
-                    images.add(sftpCaminho);
-                    ViewPageadapt viewPageadapt = new ViewPageadapt(this, images);
-                    viewPager.setAdapter(viewPageadapt);
-                } catch (FileNotFoundException e) {
-                    Toast.makeText(this, "Nao foi possivel abrir a foto selecionada.", Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-
-                }
-
+                //Toast.makeText(Cadastro.this, data.getData().getPath(), Toast.LENGTH_SHORT).show();
+                inputstream = getContentResolver().openInputStream(data.getData());
+                image = BitmapFactory.decodeStream(inputstream);
+                images.add(sftpCaminho);
+                ViewPageadapt viewPageadapt = new ViewPageadapt(this, images);
+                viewPager.setAdapter(viewPageadapt);
+            } catch (FileNotFoundException e) {
+                Toast.makeText(this, "Nao foi possivel abrir a foto selecionada.", Toast.LENGTH_LONG).show();
+            }
 
 
         }
@@ -187,7 +184,7 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                         System.out.println(a[0]);
                         if(a[0].contains("jpg") || a[0].contains("png")) {
                             final View itemView = inflater.inflate(R.layout.postpics, container, false);
-                            final ImageView images = (ImageView) itemView.findViewById(R.id.imgpic);
+                            final ImageView images = itemView.findViewById(R.id.imgpic);
                             DisplayMetrics dis = new DisplayMetrics();
                             activity.getWindowManager().getDefaultDisplay().getMetrics(dis);
                             images.setMinimumHeight(dis.heightPixels);
@@ -209,8 +206,9 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                         else if(a[0].contains("mp4") || a[0].contains("avi"))
                         {
                             inflater = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            assert inflater != null;
                             final View itemView = inflater.inflate(R.layout.postvideo, container, false);
-                            final VideoView video = (VideoView) itemView.findViewById(R.id.imgvid);
+                            final VideoView video = itemView.findViewById(R.id.imgvid);
                             try {
                                 if(!video.isPlaying()) {
                                     Uri uri = Uri.parse(imagess.get(position));
@@ -218,7 +216,7 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                                 }
 
                             }
-                            catch (Exception e){}
+                            catch (Exception ignored){}
                             video.requestFocus();
                             video.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -236,7 +234,7 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                     {
                         inflater = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         final View itemView = inflater.inflate(R.layout.postaudio, container, false);
-                        TextView audio = (TextView) itemView.findViewById(R.id.nomeAudio);
+                        TextView audio = itemView.findViewById(R.id.nomeAudio);
                         audio.setText(imagess.get(position).substring(imagess.get(position).lastIndexOf("/") + 1));
                         container.addView(itemView);
                         itemViews[0] = itemView;
@@ -245,8 +243,8 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                         {
                             inflater = (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             final View itemView = inflater.inflate(R.layout.postarquivos, container, false);
-                            final TextView name = (TextView) itemView.findViewById(R.id.nomeArquivo);
-                            final ImageView pic = (ImageView) itemView.findViewById(R.id.doc);
+                            final TextView name = itemView.findViewById(R.id.nomeArquivo);
+                            final ImageView pic = itemView.findViewById(R.id.doc);
                             final String nome = (imagess.get(position).substring(imagess.get(position).lastIndexOf("/")+1));
                             Thread t = new Thread()
                             {

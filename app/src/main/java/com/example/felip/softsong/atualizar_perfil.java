@@ -148,7 +148,7 @@ public class atualizar_perfil extends Activity {
                     String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
                     new HTTPServer(newpath + "-" + file.getName(), encodedImage).execute();
                     editor.putString("foto_perfil", newpath + "-" + file.getName());
-                    editor.commit();
+                    editor.apply();
                     stmt.executeUpdate("Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "', descricao='" + bio.getText() + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id",""));
                 }
             } catch (Exception e) {

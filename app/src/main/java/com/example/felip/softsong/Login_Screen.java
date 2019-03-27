@@ -11,7 +11,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,19 +21,18 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Login_Screen extends AppCompatActivity {
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
-    Button btnLogin;
-    TextView txtLogin, txtSenha, txtCadastro;
+    FrameLayout btnLogin;
+    TextView txtLogin, txtSenha, txtCadastro, text;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
     public static SharedPreferences sharedPref;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login_screen);
             sharedPref = this.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
-            String x = sharedPref.getString("usu", "");
-            if(sharedPref.getString("usu", "") != "")
+            if(!sharedPref.getString("usu", "").equals(""))
             {
                 Intent my = new Intent(Login_Screen.this, Home_Screen.class);
                 startActivity(my);
@@ -68,6 +68,10 @@ public class Login_Screen extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
 
             // Should we show an explanation?
+            // No explanation needed, we can request the permission.
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
             if (ActivityCompat.shouldShowRequestPermissionRationale(Login_Screen.this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
@@ -76,26 +80,21 @@ public class Login_Screen extends AppCompatActivity {
                 // sees the explanation, try again to request the permission.
 
             } else {
-
-                // No explanation needed, we can request the permission.
-
                 ActivityCompat.requestPermissions(Login_Screen.this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         }
-
-            btnLogin = (Button) findViewById(R.id.btn_Login);
-            txtLogin = (TextView) findViewById(R.id.txtLogin);
-            txtSenha = (TextView) findViewById(R.id.txtSenha);
-            txtCadastro = (TextView) findViewById(R.id.txtCadastro);
+            progressBar = findViewById(R.id.progress_bar);
+            text = findViewById(R.id.text);
+            btnLogin = findViewById(R.id.btn_Login);
+            txtLogin = findViewById(R.id.txtLogin);
+            txtSenha = findViewById(R.id.txtSenha);
+            txtCadastro = findViewById(R.id.txtCadastro);
 
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     DoLogin doLogin = new DoLogin();
                     doLogin.execute("");
                 }
@@ -139,7 +138,7 @@ public class Login_Screen extends AppCompatActivity {
                             editor.putString("desc", rs.getString("descricao"));
                             editor.putString("email", rs.getString("email"));
                             editor.putString("foto_perfil", rs.getString("caminho_imagem"));
-                            editor.commit();
+                            editor.apply();
                             Intent myIntent = new Intent(Login_Screen.this, Home_Screen.class);
                             startActivity(myIntent);
                             finish();
