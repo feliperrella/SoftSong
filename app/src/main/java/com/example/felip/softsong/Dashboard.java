@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,10 +23,10 @@ public class Dashboard extends Activity {
             perfil = (ImageView) findViewById(R.id.imageView5);
             Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
             email = (TextView) findViewById(R.id.email);
-            usuario = (RelativeLayout) findViewById(R.id.relativeUsu);
-            logout = (RelativeLayout) findViewById(R.id.relativeLogout);
-            configs = (RelativeLayout) findViewById(R.id.relativeConfigs);
-            notifications = (RelativeLayout) findViewById(R.id.relativeNotifications);
+            usuario =  findViewById(R.id.relativeUsu);
+            logout = findViewById(R.id.relativeLogout);
+            configs =  findViewById(R.id.relativeConfigs);
+            notifications = findViewById(R.id.relativeNotifications);
             email.setText(Login_Screen.sharedPref.getString("email",""));
             usu.setText(Login_Screen.sharedPref.getString("usu", ""));
             logout.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +84,6 @@ public class Dashboard extends Activity {
 
 
     TextView usu,email;
-    RelativeLayout usuario, logout, configs, notifications;
+    ConstraintLayout usuario, logout, configs, notifications;
     ImageView perfil;
     }

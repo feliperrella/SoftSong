@@ -104,7 +104,7 @@
                         app:layout_constraintGuide_percent="0.65" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/perfil"
+                        android:id="@+id/perfilAtualizar"
                         android:layout_width="120dp"
                         android:layout_height="120dp"
                         android:layout_marginStart="8dp"
@@ -138,7 +138,7 @@
                 android:id="@+id/Card3"
 
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="310dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal|bottom"
@@ -153,118 +153,164 @@
                 app:layout_constraintTop_toBottomOf="@+id/Card1">
 
 
-                <RelativeLayout
+                <android.support.constraint.ConstraintLayout
                     android:id="@+id/relativeUsu1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true">
 
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="20dp"
+                        app:layout_constraintGuide_percent="0.25" />
+
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="20dp"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline16"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintGuide_percent="0.75"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="20dp" />
+
                     <TextView
                         android:id="@+id/textView7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="17dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="135dp"
-                        android:layout_marginBottom="23dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Bio:"
-                        android:textSize="25dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/abio"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
                     <EditText
                         android:id="@+id/abio"
                         android:layout_width="260dp"
                         android:layout_height="42dp"
-                        android:layout_alignTop="@+id/Anome"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="105dp"
-                        android:layout_marginTop="78dp"
-                        android:layout_marginEnd="27dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#09c"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.8"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline16" />
 
                     <TextView
+                        android:id="@+id/textView8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="45dp"
-                        android:layout_marginBottom="171dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="User:"
-                        android:textSize="25dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline14"
+                        app:layout_constraintEnd_toStartOf="@+id/Auser"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <EditText
                         android:id="@+id/Auser"
                         android:layout_width="271dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="85dp"
-                        android:layout_marginTop="38dp"
-                        android:layout_marginEnd="24dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#09c"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline14"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.8"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                     <TextView
+                        android:id="@+id/textView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="21dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="90dp"
-                        android:layout_marginBottom="142dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Nome:"
-                        android:textSize="25dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline15"
+                        app:layout_constraintEnd_toStartOf="@+id/Anome"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline14" />
 
                     <EditText
                         android:id="@+id/Anome"
                         android:layout_width="266dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/Auser"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="95dp"
-                        android:layout_marginTop="19dp"
-                        android:layout_marginEnd="26dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#09c"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline15"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.8"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline14" />
 
                     <TextView
+                        android:id="@+id/textView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="11dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="135dp"
-                        android:layout_marginBottom="88dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Senha:"
-                        android:textSize="25dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+                        app:layout_constraintEnd_toStartOf="@+id/Asenha"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline15" />
 
                     <EditText
                         android:id="@+id/Asenha"
                         android:layout_width="260dp"
                         android:layout_height="42dp"
-                        android:layout_alignTop="@+id/Anome"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="105dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginEnd="29dp"
-                        android:layout_marginBottom="75dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#09c"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.8"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline15" />
 
 
-                </RelativeLayout>
+                </android.support.constraint.ConstraintLayout>
 
 
             </android.support.v7.widget.CardView>
@@ -290,77 +336,107 @@
                 app:layout_constraintTop_toBottomOf="@+id/Card3">
 
 
-                <RelativeLayout
+                <android.support.constraint.ConstraintLayout
                     android:id="@+id/relativeUsu2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true">
 
-                    <TextView
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline17"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="45dp"
+                        app:layout_constraintGuide_percent="0.40"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="20dp" />
+
+                    <android.support.constraint.Guideline
+                        android:id="@+id/guideline18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintGuide_percent="0.7"
+                        android:orientation="horizontal"
+                        app:layout_constraintGuide_begin="20dp" />
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Email:"
-                        android:textSize="25dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline17"
+                        app:layout_constraintEnd_toStartOf="@+id/Aemail"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <EditText
                         android:id="@+id/Aemail"
                         android:layout_width="290dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginLeft="90dp"
-                        android:layout_marginTop="52dp"
-                        android:layout_marginEnd="11dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#09c"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline17"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.8"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
                     <TextView
+                        android:id="@+id/textView12"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="105dp"
-                        android:layout_marginBottom="102dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Celular:"
-                        android:textSize="25dp" />
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline18"
+                        app:layout_constraintEnd_toStartOf="@+id/Acelular"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline17" />
 
                     <EditText
                         android:id="@+id/Acelular"
                         android:layout_width="248dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="130dp"
-                        android:layout_marginTop="115dp"
-                        android:layout_marginEnd="34dp"
-                        android:layout_marginBottom="94dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:textColor="#09c"
-                        android:textSize="15dp" />
+                        android:textSize="15dp"
+                        app:layout_constraintBottom_toTopOf="@+id/guideline18"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.8"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline17" />
 
                     <Button
                         android:id="@+id/btnAtualizar"
-                        android:layout_width="wrap_content"
+                        android:layout_width="121dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="156dp"
-                        android:layout_marginEnd="151dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="@drawable/button_shape"
                         android:text="Atualizar"
-                        android:textColor="#ffffff" />
+                        android:textColor="#ffffff"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/guideline18" />
 
-                </RelativeLayout>
+                </android.support.constraint.ConstraintLayout>
 
 
             </android.support.v7.widget.CardView>

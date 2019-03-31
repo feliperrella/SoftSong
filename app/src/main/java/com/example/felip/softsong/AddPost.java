@@ -3,6 +3,7 @@ package com.example.felip.softsong;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -349,6 +351,15 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
             Toast.makeText(AddPost.this, "Post adicionado com sucesso", Toast.LENGTH_LONG).show();
         }
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent my = new Intent(AddPost.this, Home_Screen.class);
+            startActivity(my, ActivityOptions.makeSceneTransitionAnimation(AddPost.this).toBundle());
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     ArrayList<String> images = new ArrayList<>();
     ViewPager viewPager;

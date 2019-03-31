@@ -2,6 +2,7 @@ package com.example.felip.softsong;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,7 +37,10 @@ import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -141,6 +146,7 @@ public class PostDeals {
                 final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
                 indicator = (CircleIndicator) vieww.findViewById(R.id.indicator);
                 ImageView perfil = (ImageView) vieww.findViewById(R.id.postperfil);
+                ImageView comment = vieww.findViewById(R.id.commentpic);
                 Thread t = new Thread(){
                     @Override
                     public void run() {
@@ -150,17 +156,16 @@ public class PostDeals {
                 };
                 t.run();
                 Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(perfil);
-                TextView tit = (TextView) vieww.findViewById(R.id.nameee);
-                TextView desc = (TextView) vieww.findViewById(R.id.descric);
-                TextView hor = (TextView) vieww.findViewById(R.id.horarior);
-                final TextView nlikes = (TextView) vieww.findViewById(R.id.nlike);
+                TextView tit = vieww.findViewById(R.id.nameee);
+                TextView desc = vieww.findViewById(R.id.descric);
+                TextView hor = vieww.findViewById(R.id.horarior);
+                final TextView nlikes = vieww.findViewById(R.id.nlike);
                 nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
-            //new likePost(nlikes, "Carregar", id[i]).execute();
-            ImageView com = (ImageView) vieww.findViewById(R.id.commentpic);
+            ImageView com = vieww.findViewById(R.id.commentpic);
                 com.setImageResource(R.drawable.comment);
 
-                final MediaPlayer mp = (MediaPlayer) MediaPlayer.create(vieww.getContext(), R.raw.likesound);
-                final ImageView likes = (ImageView) vieww.findViewById(R.id.likepic);
+                final MediaPlayer mp = MediaPlayer.create(vieww.getContext(), R.raw.likesound);
+                final ImageView likes = vieww.findViewById(R.id.likepic);
                 likes.setImageResource(R.drawable.like);
                 likes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -172,7 +177,30 @@ public class PostDeals {
                         mp.start();
                         String g = (id.get(i));
                         new LikeDeslike(g, nlikes).execute();
-                        //new likePost(nlikes, "", id[i]).execute();
+                    }
+                });
+                comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LayoutInflater inf = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View v = inf.inflate(R.layout.comments, null);
+                        final EditText com = v.findViewById(R.id.WriteComment);
+                        final ImageView send = v.findViewById(R.id.send);
+                        final ListView comments = v.findViewById(R.id.comments);
+                        new getComments("get", id.get(i), comments, context, com.getText().toString()).execute();
+                        send.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Animation animation = AnimationUtils.loadAnimation(context, R.anim.fadein);
+                                send.startAnimation(animation);
+                                new getComments("set", id.get(i), comments, context, com.getText().toString()).execute();
+                            }
+                        });
+                        send.setImageResource(R.drawable.ic_send);
+                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                        alert.setView(v);
+                        alert.create();
+                        alert.show();
                     }
                 });
                 try {
@@ -520,16 +548,121 @@ public class PostDeals {
         }
     }
 
+    static class getComments extends AsyncTask<String,String,String>
+    {
+        ClasseConexao conexao = new ClasseConexao();
+        String idhere, o, come;
+        ListView l;
+        Context contextx;
+        int count;
+        public getComments(String s1, String s, ListView comments, Context context, String com) {
+            o = s1;
+            idhere = s;
+            l = comments;
+            contextx = context;
+            come = com;
+        }
 
-    static ArrayList<String> picture = new ArrayList<>();
-    static ArrayList<String> curtir = new ArrayList<>();
-    static ArrayList<String> nomes = new ArrayList<>();
-    static ArrayList<String> titulos = new ArrayList<>();
-    static ArrayList<String> legenda = new ArrayList<>();
+        @SuppressLint("WrongThread")
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection connection = conexao.CONN();
+                if(connection != null)
+                {
+                    comments.clear();
+                    data_horario.clear();
+                    username.clear();
+                    caminho_.clear();
+                    final Statement stmt = connection.createStatement();
+                    if(o == "get") {
+                        ResultSet rs = stmt.executeQuery("select com.comentario, com.IDComentario, com.data_horario, usu.username, usu.caminho_imagem from tblComentario as com inner join tblUsuario as usu on com.ID_Usuario = usu.IDUsuario where com.ID_Post = " + idhere);
+                        rs.beforeFirst();
+                        while (rs.next()) {
+                            comments.add(rs.getString("comentario"));
+                            data_horario.add(rs.getString("data_horario"));
+                            username.add(rs.getString("username"));
+                            caminho_.add(rs.getString("caminho_imagem"));
+                        }
+                        customA adapter = new customA(contextx);
+                        l.setAdapter(adapter);
+                    }
+                    else
+                    {
+                        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        final Date date = new Date();
+                        Thread t = new Thread(){
+                            @Override
+                            public void run() {
+                                super.run();
+                                try {
+                                    String a = "{call addComment(" + Login_Screen.sharedPref.getString("id", "") + ", " + idhere + ", '" + come + "','" + dateFormat.format(date) + "')}";
+                                    stmt.executeQuery(a);
+                                    new getComments("get", idhere, l, contextx, come).execute();
+                                }
+                                catch (Exception e){}
+                            }
+                        };
+                        t.run();
+
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    static class customA extends BaseAdapter{
+        Context context;
+        public customA(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return comments.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int i, View view, ViewGroup viewGroup) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            final View vieww = inflater.inflate(R.layout.individual_comment, null);
+            final ImageView img = vieww.findViewById(R.id.commperfil);
+            final TextView txt = vieww.findViewById(R.id.comm);
+            final TextView hor = vieww.findViewById(R.id.commhor);
+            Thread x = new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
+                    txt.setText(username.get(i) + ": " + comments.get(i));
+                    hor.setText(data_horario.get(i));
+                }
+            };
+            x.run();
+            return vieww;
+        }
+    }
+
+
+    private static ArrayList<String> picture = new ArrayList<>(),curtir = new ArrayList<>(), nomes = new ArrayList<>(), titulos = new ArrayList<>(),legenda = new ArrayList<>(),id = new ArrayList<>();
     static ArrayList<String> data = new ArrayList<>();
-    static String[] images = null;
-    static ArrayList<String> id = new ArrayList<>();
-    static CircleIndicator indicator;
-    public static String count;
-    static ListView posts;
+    static ArrayList<String> comments = new ArrayList<>(), data_horario = new ArrayList<>(), username = new ArrayList<>(), caminho_ = new ArrayList<>();
+    private static String[] images = null;
+    @SuppressLint("StaticFieldLeak")
+    private static CircleIndicator indicator;
+    @SuppressLint("StaticFieldLeak")
+    private static ListView posts;
 }

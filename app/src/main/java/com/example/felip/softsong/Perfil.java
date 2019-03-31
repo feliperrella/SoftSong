@@ -2,6 +2,7 @@ package com.example.felip.softsong;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,8 +29,6 @@ public class Perfil extends Activity {
     public static String[] data;
     public static String[] id;
     public static  String[] images;
-
-
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,12 +80,31 @@ public class Perfil extends Activity {
                 startActivity(my);
             }
         });
+
+        follows.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Seguidores_Seguidos.usu = Login_Screen.sharedPref.getString("usu", "");
+                Seguidores_Seguidos.Op = "seguidos";
+                Intent my = new Intent(Perfil.this, Seguidores_Seguidos.class);
+                startActivity(my);
+            }
+        });
+        followings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Seguidores_Seguidos.usu = Login_Screen.sharedPref.getString("usu", "");
+                Seguidores_Seguidos.Op = "seguidores";
+                Intent my = new Intent(Perfil.this, Seguidores_Seguidos.class);
+                startActivity(my);
+            }
+        });
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
             Intent my = new Intent(Perfil.this, Home_Screen.class);
-            startActivity(my);
+            startActivity(my, ActivityOptions.makeSceneTransitionAnimation(Perfil.this).toBundle());
         }
 
         return super.onKeyDown(keyCode, event);

@@ -2,9 +2,9 @@ package com.example.felip.softsong;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -145,8 +145,7 @@ public class Search  extends Activity {
                 public void onClick(View view) {
                     user = (String) usu.getText();
                     try {
-                        BitmapDrawable bit = (BitmapDrawable) per.getDrawable();
-                        caminho = bit.getBitmap();
+                        cami = "http://192.168.15.17/pictures/" + ft[i];
                     }
                     catch (Exception e){}
                     //Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
@@ -167,7 +166,7 @@ public class Search  extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
             Intent my = new Intent(Search.this, Home_Screen.class);
-            startActivity(my);
+            startActivity(my, ActivityOptions.makeSceneTransitionAnimation(Search.this).toBundle());
         }
 
         return super.onKeyDown(keyCode, event);
@@ -175,6 +174,7 @@ public class Search  extends Activity {
 
     public static String user;
     public static Bitmap caminho;
+    public static String cami;
     String[] pe, ft, nm;
     EditText search;
     ListView people;

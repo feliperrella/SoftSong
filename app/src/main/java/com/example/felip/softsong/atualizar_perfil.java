@@ -35,21 +35,28 @@ public class atualizar_perfil extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.atualizar_usuario);
-        perfil = (ImageView) findViewById(R.id.perfil);
-        user = (EditText) findViewById(R.id.Auser);
-        nome = (EditText) findViewById(R.id.Anome);
-        senha = (EditText) findViewById(R.id.Asenha);
-        bio = (EditText) findViewById(R.id.abio);
-        email = (EditText) findViewById(R.id.Aemail);
-        celular = (EditText) findViewById(R.id.Acelular);
-        Button update = (Button) findViewById(R.id.btnAtualizar);
+        perfil = findViewById(R.id.perfilAtualizar);
+        user = findViewById(R.id.Auser);
+        nome = findViewById(R.id.Anome);
+        senha = findViewById(R.id.Asenha);
+        bio = findViewById(R.id.abio);
+        email = findViewById(R.id.Aemail);
+        celular = findViewById(R.id.Acelular);
+        Button update = findViewById(R.id.btnAtualizar);
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new update().execute();
             }
         });
-        Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
+        Thread foto = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+            }
+        };
+        foto.run();
         new Load().execute();
         perfil.setOnClickListener(new View.OnClickListener() {
             @Override
