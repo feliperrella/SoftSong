@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
@@ -66,7 +66,7 @@
                                 android:layout_marginStart="15dp"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginTop="6dp"
-                                app:srcCompat="@drawable/like" />
+                                app:srcCompat="@drawable/heart_white" />
 
                             <ImageView
                                 android:id="@+id/commentpic"
@@ -93,16 +93,16 @@
                                 android:textStyle="bold" />
 
                             <me.relex.circleindicator.CircleIndicator
-                                android:id="@+id/indicator"
-                                android:layout_width="140dp"
-                                android:layout_height="35dp"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginVertical="10dp"
-                                android:layout_marginTop="6dp"
-                                android:layout_marginEnd="10dp"
-                                android:layout_marginRight="10dp"
-                                app:ci_drawable="@drawable/item_swipe" />
+                            android:id="@+id/indicator"
+                            android:layout_width="140dp"
+                            android:layout_height="35dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginVertical="10dp"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginRight="10dp"
+                            app:ci_drawable="@drawable/item_swipe" />
 
                             <TextView
                                 android:id="@+id/horarior"

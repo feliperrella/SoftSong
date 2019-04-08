@@ -1,23 +1,38 @@
 package com.example.felip.softsong;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.CardView;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.util.Base64;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +47,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import cdflynn.android.library.checkview.CheckView;
+
+import static android.view.View.VISIBLE;
 
 public class Cadastro_Screen extends Activity {
 
@@ -48,24 +67,40 @@ public class Cadastro_Screen extends Activity {
     public static String Destino;
     TextView txtNome;
     TextView txtEmail;
-    TextView txtSenha, txtNm;
+    TextView txtSenha, txtNm, tchau;
+    ProgressBar pb;
     String nome, nm;
+    CheckView check;
     String senha;
     String Email;
+    int countt;
     String Verifica_Email;
     String Verifica_User;
     public static Bitmap image;
+    AnimationDrawable an;
+    CardView btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(1);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         setContentView(R.layout.cadastro_screen);
-        final Button btn = (Button) findViewById(R.id.btnCadas);
-        txtNome = (TextView) findViewById(R.id.txtNome);
-        txtNm = (TextView) findViewById(R.id.txtNm);
-        txtEmail = (TextView) findViewById(R.id.txtEmail);
-        txtSenha = (TextView) findViewById(R.id.txtSenha);
-        img = (ImageView) findViewById(R.id.imageView4);
+        btn = findViewById(R.id.btnCadas);
+        Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
+        getWindow().setEnterTransition(fade);
+        ConstraintLayout trans = findViewById(R.id.trans);
+        txtNome = findViewById(R.id.txtNome);
+        check = findViewById(R.id.check);
+        tchau = findViewById(R.id.txtTchau);
+        pb = findViewById(R.id.progress_bar1);
+        txtNm = findViewById(R.id.txtNm);
+        txtEmail = findViewById(R.id.txtEmail);
+        txtSenha = findViewById(R.id.txtSenha);
+        img = findViewById(R.id.imagedocad);
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,13 +127,17 @@ public class Cadastro_Screen extends Activity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Cadastro esta sendo efetudo, aguarde por favor", Toast.LENGTH_LONG).show();
+                    width();
+                    resto();
                     Cadastra cadastra = new Cadastra();
                     cadastra.execute("");
                 }
             }
         });
-
+        an = (AnimationDrawable) trans.getBackground();
+        an.setEnterFadeDuration(4000);
+        an.setExitFadeDuration(4000);
+        an.start();
 
     }
 
@@ -139,13 +178,13 @@ public class Cadastro_Screen extends Activity {
                 if (con == null) {
                     message = "Erro na Conexao";
                 } else {
-                    String query = "select count(*), username, email from tblUsuario";
+                    String query = "select (Select IDUsuario from tblUsuario order by IDUsuario DESC limit 1) as counter, username, email from tblUsuario";
                     String vemail = "Select * from tblUsuario where email = '" + Email + "'";
                     String veuser = "Select * from tblUsuario where username = '" + nome + "'";
                     Statement stmt = con.createStatement();
                     rs = stmt.executeQuery(query);
                     if(rs != null && rs.next()){
-                        count = rs.getInt("count(*)");
+                        count = rs.getInt("counter");
                     }
                     rs = stmt.executeQuery(vemail);
                     if(rs != null && rs.next()){
@@ -187,7 +226,8 @@ public class Cadastro_Screen extends Activity {
                 return Aviso;
             }
             else {
-                query = "Insert into tblUsuario Values(" + (count + 1) + ",'" + nome + "','" + senha + "','" + Email + "','2019-02-26',' ',' ',' ','" + nm + "',' ','" + (count + 1) + ".jpg','')";
+                count += 1;
+                query = "Insert into tblUsuario Values(" + count + ",'" + nome + "','" + senha + "','" + Email + "','2019-02-26',' ',' ',' ','" + nm + "',' ','" + (count + 1) + ".jpg','')";
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
@@ -204,15 +244,13 @@ public class Cadastro_Screen extends Activity {
                         message = "Erro na Conexao.";
                     } else {
                         Statement st = conne.createStatement();
-                        st.executeUpdate(query);
+                        countt = st.executeUpdate(query);
                         message = "Cadastro Realizado com sucesso";
                         SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
                         editor.putString("usu",nome);
                         editor.putString("email", senha);
                         editor.putString("foto_perfil", (count+1) + ".jpg");
                         editor.commit();
-                        Intent myIntent = new Intent(Cadastro_Screen.this, Home_Screen.class);
-                        startActivity(myIntent);
                     }
                 } catch (SQLException e) {
                     System.out.println(e.getMessage().toString());
@@ -228,12 +266,67 @@ public class Cadastro_Screen extends Activity {
 
         @Override
         protected void onPostExecute(String r) {
-            Toast.makeText(Cadastro_Screen.this, r, Toast.LENGTH_SHORT).show();
+            if(countt != 0)
+            {
+                pb.animate().alpha(0f)
+                        .setDuration(250)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                check.check();
+                            }
+                        })
+                        .start();
+                new Handler().postDelayed(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Intent Home = new Intent(Cadastro_Screen.this, Home_Screen.class);
+                        startActivity(Home, ActivityOptions.makeSceneTransitionAnimation(Cadastro_Screen.this).toBundle());
+                    }
+                }, 1400);
+            }
+            else
+            {
 
-            if (isSuccess) {
-                Toast.makeText(Cadastro_Screen.this, r, Toast.LENGTH_SHORT).show();
+            }
+
             }
 
         }
-        }
+
+    public void width()
+    {
+        ValueAnimator anim = ValueAnimator.ofInt(btn.getMeasuredWidth(), 110);
+
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = btn.getLayoutParams();
+                layoutParams.width = val;
+                btn.requestLayout();
+            }
+        });
+        anim.setDuration(250);
+        anim.start();
+    }
+
+    public void resto()
+    {
+        tchau.animate().alpha(0f)
+                .setDuration(250)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        pb.setAlpha(1f);
+                        pb.getIndeterminateDrawable().setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.SRC_IN);
+                        pb.setVisibility(VISIBLE);
+                    }
+                })
+                .start();
+    }
     }

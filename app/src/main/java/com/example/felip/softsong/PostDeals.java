@@ -67,11 +67,11 @@ public class PostDeals {
                 } else {
                     String query = "";
                     if(tipoquery.equals("all"))
-                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post  left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario in (Select IDSeguido from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ") group by post.IDPost DESC";
+                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),(Select count(*) from tblCurtir where ID_Post = post.IDPost and ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + ") as likou ,usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post  left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario in (Select IDSeguido from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ") group by post.IDPost DESC";
                     else if(tipoquery.equals("my"))
-                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + " group by post.IDPost DESC";
+                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),(Select count(*) from tblCurtir where ID_Post = post.IDPost and ID_Usuario =" + Login_Screen.sharedPref.getString("id","") + ") as likou,usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + " group by post.IDPost DESC";
                      else if(tipoquery.equals("spec"))
-                         query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),usu.username,usu.caminho_imagem,post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = (Select IDUsuario from tblUsuario where username = '" + Search.user + "') group by post.IDPost DESC";
+                         query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),(Select count(*) from tblCurtir where ID_Post = post.IDPost and ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + ") as likou,usu.username,usu.caminho_imagem,post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = (Select IDUsuario from tblUsuario where username = '" + Search.user + "') group by post.IDPost DESC";
                      Statement stmt = con.createStatement();
                      ResultSet rs = stmt.executeQuery(query);
 
@@ -80,6 +80,7 @@ public class PostDeals {
                     id.clear();
                     titulos.clear();
                     legenda.clear();
+                    likou.clear();
                     data.clear();
                     picture.clear();
                     while(rs.next())
@@ -91,6 +92,7 @@ public class PostDeals {
                         titulos.add(rs.getString("titulo"));
                         legenda.add(rs.getString("legenda"));
                         data.add(rs.getString("data_horario"));
+                        likou.add(rs.getString("likou"));
                     }
                     //rs = null;
                     //isSuccess = true;
@@ -110,6 +112,7 @@ public class PostDeals {
             posts.setAdapter(customAdapter);
         }
     }
+
 
     static class customAdapter extends BaseAdapter
     {
@@ -141,76 +144,88 @@ public class PostDeals {
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
 
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View vieww = inflater.inflate(R.layout.post, null);
-                final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
-                indicator = (CircleIndicator) vieww.findViewById(R.id.indicator);
-                ImageView perfil = (ImageView) vieww.findViewById(R.id.postperfil);
-                ImageView comment = vieww.findViewById(R.id.commentpic);
-                Thread t = new Thread(){
-                    @Override
-                    public void run() {
-                        super.run();
-                        new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
-                    }
-                };
-                t.run();
-                Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(perfil);
-                TextView tit = vieww.findViewById(R.id.nameee);
-                TextView desc = vieww.findViewById(R.id.descric);
-                TextView hor = vieww.findViewById(R.id.horarior);
-                final TextView nlikes = vieww.findViewById(R.id.nlike);
-                nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View vieww = inflater.inflate(R.layout.post, null);
+            final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
+            indicator = (CircleIndicator) vieww.findViewById(R.id.indicator);
+            ImageView perfil = (ImageView) vieww.findViewById(R.id.postperfil);
+            ImageView comment = vieww.findViewById(R.id.commentpic);
+            Thread t = new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
+                }
+            };
+            t.run();
+            Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(perfil);
+            TextView tit = vieww.findViewById(R.id.nameee);
+            TextView desc = vieww.findViewById(R.id.descric);
+            TextView hor = vieww.findViewById(R.id.horarior);
+            final TextView nlikes = vieww.findViewById(R.id.nlike);
+            nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
             ImageView com = vieww.findViewById(R.id.commentpic);
-                com.setImageResource(R.drawable.comment);
+            com.setImageResource(R.drawable.comment);
 
-                final MediaPlayer mp = MediaPlayer.create(vieww.getContext(), R.raw.likesound);
-                final ImageView likes = vieww.findViewById(R.id.likepic);
-                likes.setImageResource(R.drawable.like);
-                likes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Animation animation = AnimationUtils.loadAnimation(context, R.anim.bounce);
-                        likes.startAnimation(animation);
-                        if (mp.isPlaying())
-                            mp.stop();
-                        mp.start();
+            final MediaPlayer mp = MediaPlayer.create(vieww.getContext(), R.raw.likesound);
+            final ImageView likes = vieww.findViewById(R.id.likepic);
+            if(likou.get(i).equals("1"))
+                likes.setImageResource(R.drawable.heart);
+            else
+                likes.setImageResource(R.drawable.heart_white);
+            likes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(likou.get(i).equals("1"))
+                    {
+                        Animation s = AnimationUtils.loadAnimation(context, R.anim.fadein);
+                        likes.startAnimation(s);
+                        likes.setImageResource(R.drawable.heart_white);
                         String g = (id.get(i));
                         new LikeDeslike(g, nlikes).execute();
                     }
-                });
-                comment.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        LayoutInflater inf = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View v = inf.inflate(R.layout.comments, null);
-                        final EditText com = v.findViewById(R.id.WriteComment);
-                        final ImageView send = v.findViewById(R.id.send);
-                        final ListView comments = v.findViewById(R.id.comments);
-                        new getComments("get", id.get(i), comments, context, com.getText().toString()).execute();
-                        send.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Animation animation = AnimationUtils.loadAnimation(context, R.anim.fadein);
-                                send.startAnimation(animation);
-                                new getComments("set", id.get(i), comments, context, com.getText().toString()).execute();
-                            }
-                        });
-                        send.setImageResource(R.drawable.ic_send);
-                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                        alert.setView(v);
-                        alert.create();
-                        alert.show();
+                    else
+                    {
+                        Animation s = AnimationUtils.loadAnimation(context, R.anim.fadein);
+                        likes.startAnimation(s);
+                        likes.setImageResource(R.drawable.heart);
+                        String g = (id.get(i));
+                        new LikeDeslike(g, nlikes).execute();
                     }
-                });
-                try {
-                    tit.setText(nomes.get(i));
-                    desc.setText(nomes.get(i) + ": " + legenda.get(i));
-                    hor.setText(data.get(i));
-                    vieww.notify();
-                } catch (Exception e) {
                 }
-                return vieww;
+            });
+            comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LayoutInflater inf = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View v = inf.inflate(R.layout.comments, null);
+                    final EditText com = v.findViewById(R.id.WriteComment);
+                    final ImageView send = v.findViewById(R.id.send);
+                    final ListView comments = v.findViewById(R.id.comments);
+                    new getComments("get", id.get(i), comments, context, com.getText().toString()).execute();
+                    send.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Animation animation = AnimationUtils.loadAnimation(context, R.anim.fadein);
+                            send.startAnimation(animation);
+                            new getComments("set", id.get(i), comments, context, com.getText().toString()).execute();
+                        }
+                    });
+                    send.setImageResource(R.drawable.ic_send);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    alert.setView(v);
+                    alert.create();
+                    alert.show();
+                }
+            });
+            try {
+                tit.setText(nomes.get(i));
+                desc.setText(nomes.get(i) + ": " + legenda.get(i));
+                hor.setText(data.get(i));
+                vieww.notify();
+            } catch (Exception e) {
+            }
+            return vieww;
 
 
         }
@@ -307,7 +322,14 @@ public class PostDeals {
                                 @Override
                                 public void run() {
                                     try {
-                                        Glide.with(activity.getApplicationContext()).load("http://192.168.15.17/pictures/" + imagess[position]).override(600, 200).into(images);
+                                        Thread x = new Thread(){
+                                            @Override
+                                            public void run() {
+                                                super.run();
+                                                Glide.with(activity.getApplicationContext()).load("http://192.168.15.17/pictures/" + imagess[position]).override(600, 200).into(images);
+                                            }
+                                        };
+                                        x.run();
                                     } catch (Exception e) {
                                         //Picasso.with(activity.getApplicationContext()).load(R.drawable.ops).placeholder(R.drawable.ops).into(images);
                                     }
@@ -534,6 +556,14 @@ public class PostDeals {
                     ResultSet rs = stmt.executeQuery(a);
                     if(rs != null && rs.next())
                         n = rs.getString("COUNT(*)");
+                    Thread t = new Thread(){
+                        @Override
+                        public void run() {
+                            super.run();
+                            nlikess.setText(Integer.parseInt(n) == 1 ? n + " curtida" : n + " curtidas");
+                        }
+                    };
+                    t.run();
                     return n;
                 }
             }
@@ -544,7 +574,7 @@ public class PostDeals {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            nlikess.setText(Integer.parseInt(n) == 1 ? n + " curtida" : n + " curtidas");
+
         }
     }
 
@@ -639,14 +669,13 @@ public class PostDeals {
         public View getView(final int i, View view, ViewGroup viewGroup) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final View vieww = inflater.inflate(R.layout.individual_comment, null);
-            final ImageView img = vieww.findViewById(R.id.commperfil);
             final TextView txt = vieww.findViewById(R.id.comm);
             final TextView hor = vieww.findViewById(R.id.commhor);
             Thread x = new Thread(){
                 @Override
                 public void run() {
                     super.run();
-                    Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
+                    String a = "http://192.168.15.17/pictures/" + caminho_.get(i);
                     txt.setText(username.get(i) + ": " + comments.get(i));
                     hor.setText(data_horario.get(i));
                 }
@@ -659,10 +688,14 @@ public class PostDeals {
 
     private static ArrayList<String> picture = new ArrayList<>(),curtir = new ArrayList<>(), nomes = new ArrayList<>(), titulos = new ArrayList<>(),legenda = new ArrayList<>(),id = new ArrayList<>();
     static ArrayList<String> data = new ArrayList<>();
-    static ArrayList<String> comments = new ArrayList<>(), data_horario = new ArrayList<>(), username = new ArrayList<>(), caminho_ = new ArrayList<>();
+    static ArrayList<String> comments = new ArrayList<>(), data_horario = new ArrayList<>(), username = new ArrayList<>(), caminho_ = new ArrayList<>(), likou = new ArrayList<>();
     private static String[] images = null;
     @SuppressLint("StaticFieldLeak")
     private static CircleIndicator indicator;
     @SuppressLint("StaticFieldLeak")
     private static ListView posts;
+    static ImageView perfil, comment,com, likes;
+    static TextView tit, desc,hor,nlikes;
+    static MediaPlayer mp = null;
+    static ViewPager pub;
 }

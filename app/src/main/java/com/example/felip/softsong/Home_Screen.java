@@ -2,15 +2,29 @@ package com.example.felip.softsong;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import com.nightonke.boommenu.BoomButtons.BoomButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -23,48 +37,81 @@ import java.sql.Statement;
 public class Home_Screen extends Activity {
             public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
+                requestWindowFeature(1);
+                if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                    getWindow().setStatusBarColor(Color.TRANSPARENT);
+                }
                 setContentView(R.layout.home_screen);
-                plus = findViewById(R.id.plus);
+                Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
+                getWindow().setEnterTransition(fade);
                 posts = findViewById(R.id.posts);
-                noti = findViewById(R.id.noti);
-                ImageView postar = findViewById(R.id.addpost);
-                posts = findViewById(R.id.posts);
-                postar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent my = new Intent(Home_Screen.this, AddPost.class);
-                        startActivity(my);
-                        finish();
-                    }
-                });
-                ImageView sear = findViewById(R.id.search);
-                sear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent my = new Intent(Home_Screen.this, Search.class);
-                        startActivity(my);
-                        finish();
-                    }
-                });
-                inte = getIntent();
-                plus.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent my = new Intent(Home_Screen.this, Perfil.class);
-                        startActivity(my);
-                        finish();
-                    }
-                });
-                noti.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent my = new Intent(Home_Screen.this, NotiSeguidor.class);
-                        startActivity(my);
-                        finish();
-                    }
-                });
                 new PostDeals.GetMyPosts(this, posts, "all").execute();
                 new Not().execute();
+                bmb = findViewById(R.id.bmb);
+                for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
+                    SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder().normalImageRes(picId[i]).listener(new OnBMClickListener() {
+                        @Override
+                        public void onBoomButtonClick(final int index) {
+                            BoomButton b;
+                            View bm;
+                            Intent myIntent;
+                            ActivityOptions activityOptions;
+                            switch (index)
+                            {
+                                case 0:
+                                    new Handler().postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run() {
+                                            Intent x = new Intent(Home_Screen.this, Perfil.class);
+                                            startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
+                                        }}, 700);
+                                    break;
+                                case 1:
+                                    new Handler().postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run() {
+                                            Intent x = new Intent(Home_Screen.this, AddPost.class);
+                                            startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
+                                        }}, 700);
+                                break;
+                                case 2:
+                                    new Handler().postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run() {
+                                            Intent x = new Intent(Home_Screen.this, Search.class);
+                                            startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
+                                        }}, 700);
+                                    break;
+                                case 3:
+                                    new Handler().postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), "Recurso em construçao!!", Toast.LENGTH_SHORT);
+                                        }}, 700);
+                                    break;
+                                case 4:
+                                    new Handler().postDelayed(new Runnable()
+                                    {
+                                        @Override
+                                        public void run() {
+                                            Intent x = new Intent(Home_Screen.this, NotiSeguidor.class);
+                                            startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
+                                        }}, 700);
+                                    break;
+
+
+
+                            }
+                        }
+                    });
+                    bmb.addBuilder(builder);
+                    bmb.bringToFront();
+                }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -115,7 +162,9 @@ public class Home_Screen extends Activity {
     public static Intent inte;
     ImageView plus, noti;
     ListView posts;
-
+    BoomMenuButton bmb;
+    RelativeLayout test;
+    int[] picId = {R.drawable.ico_uso, R.drawable.ico_mais,R.drawable.ico_search, R.drawable.ic_send,R.drawable.ico_notification};
 }
 
 

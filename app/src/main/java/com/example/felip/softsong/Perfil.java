@@ -4,19 +4,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.transition.Fade;
+import android.transition.TransitionInflater;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -29,27 +37,41 @@ public class Perfil extends Activity {
     public static String[] data;
     public static String[] id;
     public static  String[] images;
+    public static int[] backs = {R.drawable.image_visibility, R.drawable.image_visibility1, R.drawable.image_visibility2};
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         setContentView(R.layout.perfil_screen);
-        perfil = (ImageView) findViewById(R.id.perfil_);
-        extras = (ImageView) findViewById(R.id.extras);
-        mypost = (ListView) findViewById(R.id.myposts);
-        ImageView back = (ImageView) findViewById(R.id.back);
+        perfil = findViewById(R.id.perfil_);
+        extras = findViewById(R.id.extras);
+        nome = findViewById(R.id.nome);
+        bt0 = findViewById(R.id.btnPostar);
+        bt1 = findViewById(R.id.btnFollowers);
+        bt2 = findViewById(R.id.btnFollowings);
+        Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
+        getWindow().setEnterTransition(fade);
+        getWindow().setExitTransition(fade);
+
+        //ImageView back = (ImageView) findViewById(R.id.back);
         mypubs = (TextView) findViewById(R.id.pubs);
         follows = (TextView) findViewById(R.id.follows);
         followings = (TextView) findViewById(R.id.following);
         new GetMyFollows().execute();
-        Thread x = new Thread(){
+        final Thread x = new Thread(){
             @Override
             public void run() {
                 super.run();
                 WizardPagerAdapter adapter = new WizardPagerAdapter();
                 ViewPager pager = (ViewPager) findViewById(R.id.segbio);
                 pager.setAdapter(adapter);
-                TextView bio = (TextView) findViewById(R.id.txtBio);
+                TextView bio = findViewById(R.id.txtBio);
                 bio.setText(Login_Screen.sharedPref.getString("desc",""));
+                ImageView visibility = findViewById(R.id.visibility);
+                visibility.setImageResource(backs[(int) (3*Math.random())]);
             }
         };
         x.run();
@@ -59,29 +81,27 @@ public class Perfil extends Activity {
             @Override
             public void run() {
                 super.run();
-                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).dontAnimate().diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(perfil);
+                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
             }
         };
         t.run();
-        new PostDeals.GetMyPosts(this, mypost, "my").execute();
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
+        {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         //new GetMyFollows().execute();
         extras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent my = new Intent(Perfil.this, Dashboard.class);
-                startActivity(my);
+                Intent x = new Intent(Perfil.this, Dashboard.class);
+                startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Perfil.this).toBundle());
             }
         });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent my = new Intent(Perfil.this, Home_Screen.class);
-                startActivity(my);
-            }
-        });
-
-        follows.setOnClickListener(new View.OnClickListener() {
+        bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Seguidores_Seguidos.usu = Login_Screen.sharedPref.getString("usu", "");
@@ -90,13 +110,23 @@ public class Perfil extends Activity {
                 startActivity(my);
             }
         });
-        followings.setOnClickListener(new View.OnClickListener() {
+        bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Seguidores_Seguidos.usu = Login_Screen.sharedPref.getString("usu", "");
                 Seguidores_Seguidos.Op = "seguidores";
                 Intent my = new Intent(Perfil.this, Seguidores_Seguidos.class);
                 startActivity(my);
+            }
+        });
+
+        bt0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Perfil.this, Posts_Holder.class);
+                i.putExtra("type", "my");
+                startActivity(i);
+
             }
         });
     }
@@ -125,13 +155,15 @@ public class Perfil extends Activity {
                 } else {
                     String sub1 = "(Select Count(*) from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ")";
                     String sub2 = "(Select Count(*) from tblSeguir where IDSeguido =" + Login_Screen.sharedPref.getString("id","") +")";
-                    String query = "select Count(*)," + sub1 + "," + sub2 + "from tblPost where ID_Usuario = " + Login_Screen.sharedPref.getString("id","");
+                    String sub3 = "(Select nome from tblUsuario where IDUsuario = " + Login_Screen.sharedPref.getString("id","") + ")";
+                    String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "from tblPost where ID_Usuario = " + Login_Screen.sharedPref.getString("id","");
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
                     if(rs != null && rs.next()){
                         a = (rs.getString("Count(*)"));
                         b = (rs.getString(sub1));
                         c = (rs.getString(sub2));
+                        d = (rs.getString(sub3));
                         runOnUiThread(new Runnable() {
 
                             @Override
@@ -139,7 +171,7 @@ public class Perfil extends Activity {
                                 mypubs.setText(a);
                                 followings.setText(c);
                                 follows.setText(b);
-
+                                nome.setText(d);
                             }
                         });
                         
@@ -170,7 +202,7 @@ public class Perfil extends Activity {
             int resId = 0;
             switch (position) {
                 case 0:
-                    resId = R.id.page_one;
+                    resId = R.id.linearLayout2;
                     break;
                 case 1:
                     resId = R.id.page_two;
@@ -193,9 +225,10 @@ public class Perfil extends Activity {
 
     ImageView perfil, extras;
     ListView mypost;
-    TextView mypubs, follows, followings;
-    ResultSet rsss;
-    String a,b,c;
+    TextView mypubs, follows, followings, nome;
+    String a,b,c,d;
+    LinearLayout bt0, bt1, bt2;
+    ConstraintLayout x;
 }
 
 

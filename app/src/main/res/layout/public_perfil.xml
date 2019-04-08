@@ -1,266 +1,317 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient">
+    android:layout_height="match_parent">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right|top">
-
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="138dp"
-                android:background="#ffffff">
-
-
-                <ListView
-                    android:id="@+id/myposts"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="80dp" />
-
-
-            </RelativeLayout>
-
             <android.support.v7.widget.CardView
-                android:id="@+id/Card1"
-                android:layout_width="364dp"
-                android:layout_height="150dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="150dp"
-                android:layout_marginRight="25dp"
-                android:elevation="8dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp">
+                android:id="@+id/cardView4"
+                android:layout_width="match_parent"
+                android:layout_height="900dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <android.support.v4.view.ViewPager
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/relativeLayout2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/seg">
+                    android:layout_height="match_parent">
 
-                <RelativeLayout
-                    android:id="@+id/publicperfil1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true">
+                    <ImageView
+                        android:id="@+id/perfil_"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/teste1"
+                        android:transitionName="bmb" />
 
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25dp"
-                        android:text="Publicações"
-                        android:textColor="#808080"
-                        android:textSize="17sp" />
+                    <ImageView
+                        android:id="@+id/visibility"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/image_visibility" />
 
-                    <TextView
-                        android:id="@+id/pubs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="52dp"
-                        android:layout_marginTop="60dp"
-                        android:text="10"
-                        android:textColor="#09c"
-                        android:textSize="19sp"
-                        android:textStyle="bold" />
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="140dp"
-                        android:layout_marginTop="25dp"
-                        android:text="Seguindo"
-                        android:textColor="#808080"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:id="@+id/follows"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="168dp"
-                        android:layout_marginTop="60dp"
-                        android:text="10"
-                        android:textColor="#09c"
-                        android:textSize="19sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="240dp"
-                        android:layout_marginTop="25dp"
-                        android:text="Seguidores"
-                        android:textColor="#808080"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:id="@+id/following"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="275dp"
-                        android:layout_marginTop="60dp"
-                        android:text="10"
-                        android:textColor="#09c"
-                        android:textSize="19sp"
-                        android:textStyle="bold" />
-
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardfollow"
-                        android:layout_width="155dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="100dp"
-                        android:elevation="8dp"
-                        app:cardCornerRadius="5dp"
-                        app:cardElevation="10dp">
+                        <TextView
+                            android:id="@+id/nome"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:text=""
+                            android:textAlignment="center"
+                            android:textColor="#fff"
+                            android:textSize="35dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.352" />
 
                         <RelativeLayout
-                            android:id="@+id/follow"
+                            android:id="@+id/relativeLayout"
+                            android:layout_width="130dp"
+                            android:layout_height="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/line_background"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/nome"
+                            app:layout_constraintVertical_bias="0.0" />
+
+                        <android.support.v4.view.ViewPager
+                            android:id="@+id/segbio"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="#09c">
+                            android:layout_height="100dp"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
-                            <TextView
-                                android:id="@+id/txtSeguir"
+                            <LinearLayout
+                                android:id="@+id/linearLayout2"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="Seguir"
+                                android:layout_height="100dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
                                 android:gravity="center"
-                                android:autoSizeTextType="uniform"
-                                android:textColor="#ffffff"
-                                android:textSize="18dp" />
+                                android:orientation="horizontal"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+                                app:layout_constraintVertical_bias="0.056">
 
-                        </RelativeLayout>
+                                <LinearLayout
+                                    android:id="@+id/btnPostar"
+                                    android:layout_width="100dp"
+                                    android:layout_height="80dp"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
 
-                    </android.support.v7.widget.CardView>
+                                    <TextView
+                                        android:id="@+id/pubs"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="#fff"
+                                        android:textSize="22sp"
+                                        android:textStyle="bold" />
 
-                    <android.support.v7.widget.CardView
-                        android:layout_width="155dp"
-                        android:layout_height="30dp"
-                        android:elevation="8dp"
-                        android:id="@+id/cardbloq"
-                        app:cardCornerRadius="5dp"
-                        app:cardElevation="10dp"
-                        android:layout_marginTop="100dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_alignParentRight="true">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="POST"
+                                        android:textColor="#fff"
+                                        android:textSize="12sp" />
 
-                        <RelativeLayout
-                            android:id="@+id/bloq"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="#FF796C">
+                                    <RelativeLayout
+                                        android:layout_width="70dp"
+                                        android:layout_height="4dp"
+                                        android:layout_marginTop="8dp"
+                                        android:background="@drawable/line_background" />
+                                </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/txtBloq"
+                                <LinearLayout
+                                    android:id="@+id/btnFollowers"
+                                    android:layout_width="100dp"
+                                    android:layout_height="80dp"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/following"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="#fff"
+                                        android:textSize="22sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="SEGUIDORES"
+                                        android:textColor="#fff"
+                                        android:textSize="12sp" />
+
+                                    <RelativeLayout
+                                        android:layout_width="70dp"
+                                        android:layout_height="4dp"
+                                        android:layout_marginTop="8dp"
+                                        android:background="@drawable/line_background" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/btnFollowings"
+                                    android:layout_width="100dp"
+                                    android:layout_height="80dp"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/follows"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textColor="#fff"
+                                        android:textSize="22sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="SEGUINDO"
+                                        android:textColor="#fff"
+                                        android:textSize="12sp" />
+
+                                    <RelativeLayout
+                                        android:layout_width="70dp"
+                                        android:layout_height="4dp"
+                                        android:layout_marginTop="8dp"
+                                        android:background="@drawable/line_background" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/page_two"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="100dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp"
                                 android:gravity="center"
-                                android:autoSizeTextType="uniform"
-                                android:text="Bloquear"
-                                android:textColor="#ffffff"
-                                android:textSize="10dp" />
+                                android:orientation="horizontal"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+                                app:layout_constraintVertical_bias="0.056">
 
-                        </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="360dp"
+                                    android:layout_height="120dp"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentTop="true"
+                                    tools:ignore="MissingConstraints">
 
-                    </android.support.v7.widget.CardView>
 
+                                    <ScrollView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_gravity="center"
+                                                android:layout_marginTop="5dp"
+                                                android:text="Bio:"
+                                                android:textAlignment="center"
+                                                android:textColor="#fff"
+                                                android:textSize="22sp"
+                                                android:textStyle="bold" />
+
+                                            <TextView
+                                                android:id="@+id/txtBio"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="8dp"
+                                                android:gravity="center"
+                                                android:lines="6"
+                                                android:maxLines="6"
+                                                android:text=""
+                                                android:textAlignment="center"
+                                                android:textColor="#fff"
+                                                tools:layout_editor_absoluteX="0dp" />
+
+                                        </LinearLayout>
+                                    </ScrollView>
+
+
+                                </RelativeLayout>
+
+                            </LinearLayout>
+
+                        </android.support.v4.view.ViewPager>
+
+                        <Button
+                            android:id="@+id/btnSeguir"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/button_follow_background"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:text="S E G U I R"
+                            android:textColor="#03ae7d"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.494"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/segbio" />
+
+                        <Button
+                            android:id="@+id/btnBloquear"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="24dp"
+                            android:background="@drawable/button_message_background"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:text="B L O Q U E A R"
+                            android:textColor="#fff"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.51"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/btnSeguir"
+                            app:layout_constraintVertical_bias="0.0" />
+
+
+
+                    </android.support.constraint.ConstraintLayout>
 
                 </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/page_bio"
-                        android:layout_width="360dp"
-                        android:layout_height="120dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        tools:ignore="MissingConstraints">
-
-
-                        <ScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical" >
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_gravity="center"
-                                    android:textAlignment="center"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="5dp"
-                                    android:text="Bio:"
-                                    android:textColor="#09c"
-                                    android:textSize="19sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/txtBioPublic"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:maxLines="6"
-                                    android:lines="6"
-                                    android:layout_marginBottom="8dp"
-                                    android:gravity="center"
-                                    android:text="Cifra de musica aleatproa.pdf"
-                                    android:textAlignment="center"
-                                    tools:layout_editor_absoluteX="0dp" />
-
-                            </LinearLayout>
-                        </ScrollView>
-
-
-
-                    </RelativeLayout>
-
-                </android.support.v4.view.ViewPager>
-
-
             </android.support.v7.widget.CardView>
 
+        </android.support.constraint.ConstraintLayout>
 
-        </RelativeLayout>
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/perfil_"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
-
-
-    </RelativeLayout>
-
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

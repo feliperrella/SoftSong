@@ -5,16 +5,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -24,27 +26,31 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static com.example.felip.softsong.Perfil.backs;
+
 public class Public_Perfil extends Activity{
 
     public static String[] id;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         setContentView(R.layout.public_perfil);
-        seguir = findViewById(R.id.cardfollow);
-        bloquear = findViewById(R.id.cardbloq);
-        txtSeguir = findViewById(R.id.txtSeguir);
-        txtBloq = findViewById(R.id.txtBloq);
-        seg = findViewById(R.id.follow);
-        bloq = findViewById(R.id.bloq);
+        seguir = findViewById(R.id.btnSeguir);
+        bloquear = findViewById(R.id.btnBloquear);
         perfil = findViewById(R.id.perfil_);
         extras = findViewById(R.id.extras);
-        mypost = findViewById(R.id.myposts);
+        bt0 = findViewById(R.id.btnPostar);
+        bt1 = findViewById(R.id.btnFollowers);
+        bt2 = findViewById(R.id.btnFollowings);
+        nome = findViewById(R.id.nome);
         mypubs = findViewById(R.id.pubs);
         follows = findViewById(R.id.follows);
         followings = findViewById(R.id.following);
         new GetMyFollows().execute();
-        new PostDeals.GetMyPosts(this, mypost, "spec").execute();
         Thread t = new Thread(){
             @Override
             public void run() {
@@ -58,58 +64,60 @@ public class Public_Perfil extends Activity{
             public void run() {
                 super.run();
                 WizardPagerAdapter adapter = new WizardPagerAdapter();
-                ViewPager pager = (ViewPager) findViewById(R.id.seg);
+                ViewPager pager = (ViewPager) findViewById(R.id.segbio);
                 pager.setAdapter(adapter);
+                ImageView visibility = findViewById(R.id.visibility);
+                visibility.setImageResource(backs[(int) (3*Math.random())]);
             }
         };
         x.run();
-        final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
-        seg.setOnClickListener(new View.OnClickListener() {
+        final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadein);
+        seguir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(txtSeguir.getText().equals("Seguir"))
+                if(seguir.getText().toString().equals("S E G U I R"))
                 {
+                    seguir.setText("S E G U I N D O");
                     seguir.startAnimation(animation);
-                    seg.setBackgroundColor(Color.parseColor("#33CC7A"));
-                    txtSeguir.setText("Seguindo");
                     q =  "Insert into tblSeguir values(" + Login_Screen.sharedPref.getString("id", "") + ", " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";
                     new Segue().execute();
                     new GetMyFollows().execute();
                 }
-                else if(txtSeguir.getText().equals("Seguindo"))
+                else if(seguir.getText().toString().equals("S E G U I N D O"))
                 {
+                    seguir.setText("S E G U I R");
                     seguir.startAnimation(animation);
-                    seg.setBackgroundColor(Color.parseColor("#0099CC"));
-                    txtSeguir.setText("Seguir");
                     q =  "Delete from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguido = " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"')";
                     new Segue().execute();
                     new GetMyFollows().execute();
                 } }
         });
 
-        bloq.setOnClickListener(new View.OnClickListener() {
+        bloquear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(txtBloq.getText().equals("Bloquear"))
+                if(bloquear.getText().toString().equals("B L O Q U E A R"))
                 {
                     bloquear.startAnimation(animation);
-                    txtBloq.setText("Bloqueado");
+                    bloquear.setText("B L O Q U E A D O");
                     q =  "Delete from tblSeguir where IDSeguidor =" + Login_Screen.sharedPref.getString("id", "") + " and IDSeguido = (Select IDUsuario from tblUsuario where username ='" + Search.user + "') ";
                     new Segue().execute();
                     q = "Insert into tblBloqueio values(" + Login_Screen.sharedPref.getString("id", "") + ", " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";//
                     new GetMyFollows().execute();
                 }
-                else if(txtBloq.getText().equals("Bloqueado"))
+                else if(bloquear.getText().toString().equals("B L O Q U E A D O"))
                 {
                     bloquear.startAnimation(animation);
-                    txtBloq.setText("Bloquear");
+                    bloquear.setText("B L O Q U E A R");
+                    seguir.setEnabled(true);
+                    seguir.setBackgroundResource(R.drawable.button_follow_background);
                     q =  "Delete from tblBloqueio where IDBloqueador = " + Login_Screen.sharedPref.getString("id", "") + " and IDBloqueado = " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"')";
                     new Segue().execute();
                     new GetMyFollows().execute();
                 }
             }
         });
-        follows.setOnClickListener(new View.OnClickListener() {
+        bt2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Seguidores_Seguidos.usu = Search.user;
@@ -118,13 +126,21 @@ public class Public_Perfil extends Activity{
                 startActivity(my);
             }
         });
-        followings.setOnClickListener(new View.OnClickListener() {
+        bt1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Seguidores_Seguidos.usu = Search.user;
                 Seguidores_Seguidos.Op = "seguidores";
                 Intent my = new Intent(Public_Perfil.this, Seguidores_Seguidos.class);
                 startActivity(my);
+            }
+        });
+        bt0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Public_Perfil.this, Posts_Holder.class);
+                i.putExtra("type", "spec");
+                startActivity(i);
             }
         });
         }
@@ -171,7 +187,8 @@ public class Public_Perfil extends Activity{
                     String sub3 = "(Select IDBloqueado from tblBloqueio where IDBloqueador = " + Login_Screen.sharedPref.getString("id", "") + " and IDBloqueado = (Select IDUsuario from tblUsuario where username ='" + Search.user + "'))";
                     String sub4 = "(Select IDSeguido from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguido = (Select IDUsuario from tblUsuario where username = '" + Search.user + "'))";
                     String sub5 = "(Select descricao from tblUsuario where username = '" + Search.user + "')";
-                    String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "," + sub4 + "," + sub5 + " from tblPost where ID_Usuario = (Select IDUsuario from tblUsuario where username ='" + Search.user + "')";
+                    String sub6 = "(select nome from tblUsuario where username = '" + Search.user + "')";
+                    String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "," + sub4 + "," + sub5 + "," + sub6 + " from tblPost where ID_Usuario = (Select IDUsuario from tblUsuario where username ='" + Search.user + "')";
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
                     if(rs != null && rs.next()){
@@ -181,10 +198,12 @@ public class Public_Perfil extends Activity{
                         d = (rs.getString(sub3));
                         e = (rs.getString(sub4));
                         f = (rs.getString(sub5));
+                        h = (rs.getString(sub6));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mypubs.setText(a);
+                                nome.setText(h);
                             }
                         });
                         runOnUiThread(new Runnable() {
@@ -213,21 +232,20 @@ public class Public_Perfil extends Activity{
         @Override
         protected void onPostExecute(String r) {
             //Toast.makeText(Perfil.this, r, Toast.LENGTH_SHORT).show();
-            TextView bio = findViewById(R.id.txtBioPublic);
+            TextView bio = findViewById(R.id.txtBio);
             bio.setText(f);
             final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadein);
             if(d != null)
             {
                 bloquear.startAnimation(animation);
-                txtBloq.setText("Bloqueado");
-                seg.setEnabled(false);
-                seg.setBackgroundColor(Color.parseColor("#BDCCC2"));
+                bloquear.setText("B L O Q U E A D O");
+                seguir.setEnabled(false);
+                seguir.setBackgroundColor(Color.parseColor("#BDCCC2"));
             }
             if(e != null)
             {
                 seguir.startAnimation(animation);
-                seg.setBackgroundColor(Color.parseColor("#33CC7A"));
-                txtSeguir.setText("Seguindo");
+                seguir.setText("S E G U I N D O");
             }
 
         }
@@ -240,10 +258,10 @@ public class Public_Perfil extends Activity{
             int resId = 0;
             switch (position) {
                 case 0:
-                    resId = R.id.publicperfil1;
+                    resId = R.id.linearLayout2;
                     break;
                 case 1:
-                    resId = R.id.page_bio;
+                    resId = R.id.page_two;
                     break;
             }
             return findViewById(resId);
@@ -263,8 +281,8 @@ public class Public_Perfil extends Activity{
 
     ImageView perfil, extras;
     ListView mypost;
-    TextView mypubs, follows, followings, txtSeguir, txtBloq;
-    CardView seguir, bloquear;
-    RelativeLayout seg, bloq;
-    String a,b,c,d,e,f,q;
+    TextView mypubs, follows, followings, nome;
+    Button seguir, bloquear;
+    LinearLayout bt0, bt1, bt2;
+    String a,b,c,d,e,f,q,h;
 }

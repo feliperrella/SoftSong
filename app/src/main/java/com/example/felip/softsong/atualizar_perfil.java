@@ -168,6 +168,7 @@ public class atualizar_perfil extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Toast.makeText(getApplicationContext(), "Informaçoes atualizadas com sucesso", Toast.LENGTH_LONG).show();
+            Glide.get(getApplicationContext()).clearMemory();
         }
     }
     ClasseConexao conexao = new ClasseConexao();
