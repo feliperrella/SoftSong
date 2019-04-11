@@ -143,13 +143,25 @@ public class PostDeals {
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View vieww = inflater.inflate(R.layout.post, null);
-            final ViewPager pub = (ViewPager) vieww.findViewById(R.id.pic);
-            indicator = (CircleIndicator) vieww.findViewById(R.id.indicator);
-            ImageView perfil = (ImageView) vieww.findViewById(R.id.postperfil);
-            ImageView comment = vieww.findViewById(R.id.commentpic);
+            final ViewHolder holder;
+            if(view == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.post, null);
+                holder = new ViewHolder();
+                holder.perfil = view.findViewById(R.id.postperfil);
+                holder.comment = view.findViewById(R.id.commentpic);
+                holder.tit = view.findViewById(R.id.nameee);
+                holder.desc = view.findViewById(R.id.descric);
+                holder.hor = view.findViewById(R.id.horarior);
+                holder.nlikes = view.findViewById(R.id.nlike);
+                holder.com = view.findViewById(R.id.commentpic);
+                holder.likes = view.findViewById(R.id.likepic);
+                view.setTag(holder);
+            }
+            else {
+                holder = (ViewHolder) view.getTag();
+            }
+            final ViewPager pub = view.findViewById(R.id.pic);
             Thread t = new Thread(){
                 @Override
                 public void run() {
@@ -158,43 +170,36 @@ public class PostDeals {
                 }
             };
             t.run();
-            Glide.with(vieww.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(perfil);
-            TextView tit = vieww.findViewById(R.id.nameee);
-            TextView desc = vieww.findViewById(R.id.descric);
-            TextView hor = vieww.findViewById(R.id.horarior);
-            final TextView nlikes = vieww.findViewById(R.id.nlike);
-            nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
-            ImageView com = vieww.findViewById(R.id.commentpic);
-            com.setImageResource(R.drawable.comment);
-
-            final MediaPlayer mp = MediaPlayer.create(vieww.getContext(), R.raw.likesound);
-            final ImageView likes = vieww.findViewById(R.id.likepic);
+            indicator = view.findViewById(R.id.indicator);
+            Glide.with(view.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(holder.perfil);
+            holder.nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
+            holder.com.setImageResource(R.drawable.comment);
             if(likou.get(i).equals("1"))
-                likes.setImageResource(R.drawable.heart);
+                holder.likes.setImageResource(R.drawable.heart);
             else
-                likes.setImageResource(R.drawable.heart_white);
-            likes.setOnClickListener(new View.OnClickListener() {
+                holder.likes.setImageResource(R.drawable.heart_white);
+            holder.likes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(likou.get(i).equals("1"))
                     {
                         Animation s = AnimationUtils.loadAnimation(context, R.anim.fadein);
-                        likes.startAnimation(s);
-                        likes.setImageResource(R.drawable.heart_white);
+                        holder.likes.startAnimation(s);
+                        holder.likes.setImageResource(R.drawable.heart_white);
                         String g = (id.get(i));
-                        new LikeDeslike(g, nlikes).execute();
+                        new LikeDeslike(g, holder.nlikes).execute();
                     }
                     else
                     {
                         Animation s = AnimationUtils.loadAnimation(context, R.anim.fadein);
-                        likes.startAnimation(s);
-                        likes.setImageResource(R.drawable.heart);
+                        holder.likes.startAnimation(s);
+                        holder.likes.setImageResource(R.drawable.heart);
                         String g = (id.get(i));
-                        new LikeDeslike(g, nlikes).execute();
+                        new LikeDeslike(g, holder.nlikes).execute();
                     }
                 }
             });
-            comment.setOnClickListener(new View.OnClickListener() {
+            holder.comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     LayoutInflater inf = (LayoutInflater)  context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -219,15 +224,26 @@ public class PostDeals {
                 }
             });
             try {
-                tit.setText(nomes.get(i));
-                desc.setText(nomes.get(i) + ": " + legenda.get(i));
-                hor.setText(data.get(i));
-                vieww.notify();
+                holder.tit.setText(nomes.get(i));
+                holder.desc.setText(nomes.get(i) + ": " + legenda.get(i));
+                holder.hor.setText(data.get(i));
+                view.notify();
             } catch (Exception e) {
             }
-            return vieww;
+            return view;
 
 
+        }
+
+        static class ViewHolder {
+            private ImageView perfil;
+            private ImageView comment;
+            private TextView tit;
+            private TextView desc;
+            private TextView hor;
+            private TextView nlikes;
+            private ImageView com;
+            private ImageView likes;
         }
 
 
@@ -667,10 +683,14 @@ public class PostDeals {
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final View vieww = inflater.inflate(R.layout.individual_comment, null);
-            final TextView txt = vieww.findViewById(R.id.comm);
-            final TextView hor = vieww.findViewById(R.id.commhor);
+            if(view == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.individual_comment, null);
+            }
+            final TextView txt = view.findViewById(R.id.comm);
+            final ImageView img = view.findViewById(R.id.perfilComment);
+            final TextView hor = view.findViewById(R.id.commhor);
+            Glide.with(view.getContext()).load("http://192.168.15.17/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
             Thread x = new Thread(){
                 @Override
                 public void run() {
@@ -681,7 +701,7 @@ public class PostDeals {
                 }
             };
             x.run();
-            return vieww;
+            return view;
         }
     }
 
