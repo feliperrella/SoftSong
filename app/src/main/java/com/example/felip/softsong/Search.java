@@ -102,7 +102,13 @@ public class Search  extends Activity {
                 public void run() {
 
                     Search.customAdapter customAdapter = new customAdapter();
-                    people.setAdapter(customAdapter);
+                    try {
+                        people.setAdapter(customAdapter);
+                    }
+                    catch (Exception e)
+                    {
+                        people.setAdapter(null);
+                    }
 
                 }
             });
@@ -135,11 +141,11 @@ public class Search  extends Activity {
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            final View vieww = getLayoutInflater().inflate(R.layout.searchlist_layout, null);
-            TextView name = (TextView) vieww.findViewById(R.id.searchname);
-            final TextView usu = (TextView) vieww.findViewById(R.id.searchusu);
-            final ImageView per = (ImageView) vieww.findViewById(R.id.seachperfil);
-            RelativeLayout rel = (RelativeLayout) vieww.findViewById(R.id.relativeSearch);
+            view = getLayoutInflater().inflate(R.layout.searchlist_layout, null);
+            TextView name = (TextView) view.findViewById(R.id.searchname);
+            final TextView usu = (TextView) view.findViewById(R.id.searchusu);
+            final ImageView per = (ImageView) view.findViewById(R.id.seachperfil);
+            RelativeLayout rel = (RelativeLayout) view.findViewById(R.id.relativeSearch);
             rel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -159,7 +165,7 @@ public class Search  extends Activity {
                 Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + ft[i]).into(per);
             }
             catch (Exception e){}
-            return vieww;
+            return view;
         }
     }
 

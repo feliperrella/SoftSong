@@ -238,9 +238,9 @@ public class Login_Screen extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             Toast.makeText(Login_Screen.this, r, Toast.LENGTH_SHORT).show();
-            finish();
             if (isSuccess) {
                 Toast.makeText(Login_Screen.this, r, Toast.LENGTH_SHORT).show();
+                finish();
             }
 
         }

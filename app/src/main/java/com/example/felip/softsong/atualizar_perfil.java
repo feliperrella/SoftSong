@@ -53,7 +53,7 @@ public class atualizar_perfil extends Activity {
             @Override
             public void run() {
                 super.run();
-                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
             }
         };
         foto.run();

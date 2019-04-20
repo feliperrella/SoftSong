@@ -17,18 +17,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Home_Screen"></activity>
-        <activity android:name=".Dashboard"></activity>
-        <activity android:name=".Perfil"></activity>
-        <activity android:name=".Seguidores_Seguidos"></activity>
-        <activity android:name=".Cadastro_Screen"></activity>
-        <activity android:name=".atualizar_perfil"></activity>
-        <activity android:name=".Public_Perfil"></activity>
-        <activity android:name=".Search"></activity>
-        <activity android:name=".Configs"></activity>
-        <activity android:name=".AddPost"></activity>
+        <activity android:name=".Home_Screen" />
+        <activity android:name=".Dashboard" />
+        <activity android:name=".Perfil" />
+        <activity android:name=".Seguidores_Seguidos" />
+        <activity android:name=".Cadastro_Screen" />
+        <activity android:name=".atualizar_perfil" />
+        <activity android:name=".Public_Perfil" />
+        <activity android:name=".Search" />
+        <activity android:name=".Configs" />
+        <activity android:name=".AddPost" />
         <activity android:name=".NotiSeguidor" />
-        <activity android:name=".Posts_Holder"></activity>
+        <activity android:name=".Chats_Index" />
+        <activity android:name=".Posts_Holder" />
 
 
 

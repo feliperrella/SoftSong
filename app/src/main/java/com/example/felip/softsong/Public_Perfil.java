@@ -183,9 +183,9 @@ public class Public_Perfil extends Activity{
                     message = "Error in connection with SQL server";
                 } else {
                     String sub1 = "(Select Count(IDSeguidor) from tblSeguir where IDSeguidor = (Select IDUsuario from tblUsuario where username ='" + Search.user + "'))";
-                    String sub2 = "(Select Count(IDSeguido) from tblSeguir where IDSeguido = (Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";
+                    String sub2 = "(Select Count(IDSeguindo) from tblSeguir where IDSeguindo = (Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";
                     String sub3 = "(Select IDBloqueado from tblBloqueio where IDBloqueador = " + Login_Screen.sharedPref.getString("id", "") + " and IDBloqueado = (Select IDUsuario from tblUsuario where username ='" + Search.user + "'))";
-                    String sub4 = "(Select IDSeguido from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguido = (Select IDUsuario from tblUsuario where username = '" + Search.user + "'))";
+                    String sub4 = "(Select IDSeguindo from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguindo = (Select IDUsuario from tblUsuario where username = '" + Search.user + "'))";
                     String sub5 = "(Select descricao from tblUsuario where username = '" + Search.user + "')";
                     String sub6 = "(select nome from tblUsuario where username = '" + Search.user + "')";
                     String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "," + sub4 + "," + sub5 + "," + sub6 + " from tblPost where ID_Usuario = (Select IDUsuario from tblUsuario where username ='" + Search.user + "')";

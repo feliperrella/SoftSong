@@ -154,7 +154,7 @@ public class Perfil extends Activity {
                     message = "Error in connection with SQL server";
                 } else {
                     String sub1 = "(Select Count(*) from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ")";
-                    String sub2 = "(Select Count(*) from tblSeguir where IDSeguido =" + Login_Screen.sharedPref.getString("id","") +")";
+                    String sub2 = "(Select Count(*) from tblSeguir where IDSeguindo =" + Login_Screen.sharedPref.getString("id","") +")";
                     String sub3 = "(Select nome from tblUsuario where IDUsuario = " + Login_Screen.sharedPref.getString("id","") + ")";
                     String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "from tblPost where ID_Usuario = " + Login_Screen.sharedPref.getString("id","");
                     Statement stmt = con.createStatement();

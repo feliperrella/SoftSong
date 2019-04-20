@@ -43,7 +43,7 @@ public class Seguidores_Seguidos extends Activity {
                     foto.clear();
                     name.clear();
                     Statement stmt = connection.createStatement();
-                    ResultSet rs = stmt.executeQuery(Op == "seguidos" ? "Select username, nome, caminho_imagem from tblUsuario where IDUsuario in (Select IDSeguido from tblSeguir where IDSeguidor = (Select IDUsuario from tblUsuario where username = '" + usu + "'))" : "Select username, nome, caminho_imagem from tblUsuario where IDUsuario in (Select IDSeguidor from tblSeguir where IDSeguido = (Select IDUsuario from tblUsuario where username = '" + usu + "'))");
+                    ResultSet rs = stmt.executeQuery(Op == "seguidos" ? "Select username, nome, caminho_imagem from tblUsuario where IDUsuario in (Select IDSeguindo from tblSeguir where IDSeguidor = (Select IDUsuario from tblUsuario where username = '" + usu + "'))" : "Select username, nome, caminho_imagem from tblUsuario where IDUsuario in (Select IDSeguidor from tblSeguir where IDSeguindo = (Select IDUsuario from tblUsuario where username = '" + usu + "'))");
                     rs.beforeFirst();
                     while(rs.next())
                     {

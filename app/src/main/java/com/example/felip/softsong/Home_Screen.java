@@ -19,7 +19,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
@@ -91,7 +90,8 @@ public class Home_Screen extends Activity {
                                     {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(getApplicationContext(), "Recurso em construçao!!", Toast.LENGTH_SHORT);
+                                            Intent x = new Intent(Home_Screen.this, Chats_Index.class);
+                                            startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
                                         }}, 700);
                                     break;
                                 case 4:
@@ -126,7 +126,7 @@ public class Home_Screen extends Activity {
                 if(connection != null)
                 {
                     Statement stmt = connection.createStatement();
-                    ResultSet rs = stmt.executeQuery("Select Count(*) from tblSeguir where IDSeguido = " + Login_Screen.sharedPref.getString("id",""));
+                    ResultSet rs = stmt.executeQuery("Select Count(*) from tblSeguir where IDSeguindo = " + Login_Screen.sharedPref.getString("id",""));
                     if(rs != null && rs.next())
                     {
                         SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
