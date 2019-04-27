@@ -227,7 +227,7 @@ public class Cadastro_Screen extends Activity {
             }
             else {
                 count += 1;
-                query = "Insert into tblUsuario Values(" + count + ",'" + nome + "','" + senha + "','" + Email + "','2019-02-26',' ',' ',' ','" + nm + "',' ','" + (count + 1) + ".jpg','')";
+                query = "Insert into tblUsuario() values(" + count + ",'" + nome + "','" + senha + "','" + Email + "','2019-02-26',' ',' ',' ','" + nm + "',' ','" + (count + 1) + ".jpg')";
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
@@ -247,8 +247,9 @@ public class Cadastro_Screen extends Activity {
                         countt = st.executeUpdate(query);
                         message = "Cadastro Realizado com sucesso";
                         SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
+                        editor.putString("id",count + "");
                         editor.putString("usu",nome);
-                        editor.putString("email", senha);
+                        editor.putString("email", Email);
                         editor.putString("foto_perfil", (count+1) + ".jpg");
                         editor.commit();
                     }

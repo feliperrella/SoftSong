@@ -10,7 +10,6 @@
         android:id="@+id/imgpic"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:background="@drawable/ic_logo2"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp"
         />
