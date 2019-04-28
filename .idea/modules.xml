@@ -3,9 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SoftSong.iml" filepath="$PROJECT_DIR$/SoftSong.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SoftSong.iml" filepath="$PROJECT_DIR$/SoftSong.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/commons-io-2.6/commons-io-2.6.iml" filepath="$PROJECT_DIR$/commons-io-2.6/commons-io-2.6.iml" />
+      <module fileurl="file://$PROJECT_DIR$/commons-io-2.6/commons-io-2.6.iml" filepath="$PROJECT_DIR$/commons-io-2.6/commons-io-2.6.iml" />
       <module fileurl="file://$PROJECT_DIR$/jsch-0.1.54/jsch-0.1.54.iml" filepath="$PROJECT_DIR$/jsch-0.1.54/jsch-0.1.54.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jsch-0.1.54/jsch-0.1.54.iml" filepath="$PROJECT_DIR$/jsch-0.1.54/jsch-0.1.54.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.iml" filepath="$PROJECT_DIR$/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.iml" />
       <module fileurl="file://$PROJECT_DIR$/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.iml" filepath="$PROJECT_DIR$/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.iml" />
     </modules>
   </component>
