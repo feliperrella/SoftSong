@@ -194,14 +194,11 @@ public class Login_Screen extends AppCompatActivity {
                 message = "Insira seu Usuario e Senha.";
             else {
                 try {
-                    Connection con = conexao.CONN();
-                    if (con == null) {
-                        message = "Error in connection with SQL server";
-                    } else {
+                    conexao = new ClasseConexao();
+                        Connection con = conexao.CONN();
                         String query = "select * from tblUsuario where username='" + userid + "' and senha='" + password + "'";
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery(query);
-
                         if (rs.next()) {
                             message = "Login para " + userid;
                             isSuccess = true;
@@ -224,8 +221,6 @@ public class Login_Screen extends AppCompatActivity {
                             message = "Usuario ou senha incorretos.";
                             isSuccess = false;
                         }
-
-                    }
                 } catch (Exception ex) {
                     isSuccess = false;
                     message = "Desculpe, algo deu errado.";

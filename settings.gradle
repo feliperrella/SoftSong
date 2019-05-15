@@ -1,1 +1,1 @@
-include ':app', ':mysql-connector-java-5.1.47-bin', ':jsch-0.1.54', ':commons-io-2.6'
+include ':app', ':mysql-connector-java-5.1.47-bin', ':commons-io-2.6', ':softsongwear'
