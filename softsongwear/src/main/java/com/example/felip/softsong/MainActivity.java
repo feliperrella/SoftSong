@@ -1,26 +1,34 @@
 package com.example.felip.softsong;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.github.florent37.davinci.DaVinci;
+import com.google.android.gms.common.data.FreezableUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.Wearable;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
-public class MainActivity extends WearableActivity {
+public class MainActivity extends WearableActivity implements DataClient.OnDataChangedListener {
 
-    private TextView mTextView;
+    private  ImageView perfil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +36,53 @@ public class MainActivity extends WearableActivity {
         setContentView(R.layout.activity_main);
         // Enables Always-on
         setAmbientEnabled();
-        new Load().execute();
+        perfil = findViewById(R.id.Perfil);
         final Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
-        ((ImageView) findViewById(R.id.bounce)).setOnClickListener(new View.OnClickListener() {
+        (findViewById(R.id.bounce)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ImageView) findViewById(R.id.bounce)).startAnimation(anim);
+                (findViewById(R.id.bounce)).startAnimation(anim);
             }
         });
-        //new PostDeals.GetMyPosts(this, ((ListView) findViewById(R.id.list)), "all").execute();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+
+        Wearable.getDataClient(this).addListener(this).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                System.out.println("sucesso");
+            }
+        });
+    }
+
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Wearable.getDataClient(this).removeListener(this);
+
+    }
+
+    @Override
+    public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
+        final List<DataEvent> events = FreezableUtils.freezeIterable(dataEventBuffer);
+        for(DataEvent event : events) {
+                final DataMap map = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                // read your values from map:
+                String id = map.getString("ID");
+                System.out.println("foi");
+                Log.v("Feliperrella", "ID recebido: " + id);
+        }
     }
 
     class Load extends AsyncTask<String,String,String>
@@ -45,10 +91,10 @@ public class MainActivity extends WearableActivity {
         protected String doInBackground(String... strings) {
             ClasseConexao classeConexao = new ClasseConexao();
             try {
-                String sub1 = "(Select Count(*) from tblSeguir where IDSeguidor = " + "5" + ")";
-                String sub2 = "(Select Count(*) from tblSeguir where IDSeguindo =" + "5" +")";
-                final String sub3 = "(Select caminho_imagem from tblUsuario where IDUsuario = " + "5" + ")";
-                String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "from tblPost where ID_Usuario = " + "5";
+                String sub1 = "(Select Count(*) from tblSeguir where IDSeguidor = " + ID + ")";
+                String sub2 = "(Select Count(*) from tblSeguir where IDSeguindo =" + ID +")";
+                final String sub3 = "(Select caminho_imagem from tblUsuario where IDUsuario = " + ID + ")";
+                String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "from tblPost where ID_Usuario = " + ID;
                 Connection connection = classeConexao.CONN();
                 Statement stmt = connection.createStatement();
                 final ResultSet rs = stmt.executeQuery(query);
@@ -58,7 +104,6 @@ public class MainActivity extends WearableActivity {
                     ((TextView) findViewById(R.id.SEGUINDO)).setText(rs.getString(sub1));
                     ((TextView) findViewById(R.id.SEGUIDORES)).setText(rs.getString(sub2));
                     System.out.println("http://192.168.15.17/pictures/" + rs.getString(sub3));
-                    DaVinci.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + rs.getString(sub3)).into(((ImageView) findViewById(R.id.Perfil)));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -66,4 +111,5 @@ public class MainActivity extends WearableActivity {
             return null;
         }
     }
+    String ID = "";
 }

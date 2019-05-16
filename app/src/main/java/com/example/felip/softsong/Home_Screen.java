@@ -5,13 +5,18 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -20,20 +25,49 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.CapabilityClient;
+import com.google.android.gms.wearable.CapabilityInfo;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.MessageClient;
+import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
 import com.nightonke.boommenu.BoomButtons.SimpleCircleButton;
 import com.nightonke.boommenu.BoomMenuButton;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import jp.android.a.akira.library.okwear.OkWear;
+import jp.android.a.akira.library.okwear.listener.WearReceiveListener;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 //                SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
 //                editor.clear();
 //                editor.commit();
-public class Home_Screen extends Activity {
+public class Home_Screen extends Activity implements DataClient.OnDataChangedListener,
+        MessageClient.OnMessageReceivedListener,
+        CapabilityClient.OnCapabilityChangedListener{
             public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 requestWindowFeature(1);
@@ -112,6 +146,71 @@ public class Home_Screen extends Activity {
                     bmb.addBuilder(builder);
                     bmb.bringToFront();
                 }
+                Wearable.getDataClient(this).addListener(this ).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("xxxxx");
+                        syncDataItem();
+                    }
+                });
+
+                Glide.with(this).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).asBitmap().into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        b = resource;
+                    }
+                });
+
+    }
+
+    public void syncDataItem(){
+
+        final PutDataMapRequest putRequest = PutDataMapRequest.create("/PHONE2WEAR");
+        final DataMap map = putRequest.getDataMap();
+        map.putString("ID", Login_Screen.sharedPref.getString("id", ""));
+
+        Wearable.getDataClient(this).putDataItem(putRequest.asPutDataRequest())
+                .addOnSuccessListener(new OnSuccessListener<DataItem>() {
+                    @Override
+                    public void onSuccess(DataItem dataItem) {
+                        System.out.println("yyyyy");
+                    }
+                });
+
+
+    }
+
+    @Override
+    public void onCapabilityChanged(@NonNull CapabilityInfo capabilityInfo) {
+
+    }
+
+    @Override
+    public void onDataChanged(@NonNull DataEventBuffer dataEventBuffer) {
+
+    }
+
+    @Override
+    public void onMessageReceived(@NonNull MessageEvent messageEvent) {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        Wearable.getDataClient(this).addListener(this );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Wearable.getDataClient(this).removeListener(this);
+
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -164,6 +263,8 @@ public class Home_Screen extends Activity {
     ListView posts;
     BoomMenuButton bmb;
     RelativeLayout test;
+    Bitmap b;
+    GoogleApiClient mGoogleApiClient;
     int[] picId = {R.drawable.ico_uso, R.drawable.ico_mais,R.drawable.ico_search, R.drawable.ic_send,R.drawable.ico_notification};
 }
 
