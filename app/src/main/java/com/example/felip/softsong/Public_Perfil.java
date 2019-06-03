@@ -87,7 +87,7 @@ public class Public_Perfil extends Activity{
                 {
                     seguir.setText("S E G U I R");
                     seguir.startAnimation(animation);
-                    q =  "Delete from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguido = " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"')";
+                    q =  "Delete from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguindo = " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"')";
                     new Segue().execute();
                     new GetMyFollows().execute();
                 } }

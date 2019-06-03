@@ -29,6 +29,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     //noinspection GradleCompatible
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:27.0.0'
     implementation fileTree(include: ['/Users/feliperrella/Documents/SoftSong/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.jar'], dir: 'libs')
     implementation fileTree(include: ['/Users/feliperrella/Documents/SoftSong/commons-io-2.6/commons-io-2.6.jar'], dir: 'libs')
@@ -51,6 +52,5 @@ dependencies {
     implementation 'com.nightonke:boommenu:2.1.1'
     implementation 'com.google.android.exoplayer:exoplayer:2.7.2'
     implementation 'com.github.chrisbanes:PhotoView:2.1.3'
-    implementation 'com.github.aakira:okwear:1.0.2'
-
+    wearApp project(':softsongwear')
 }
