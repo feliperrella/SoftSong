@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,7 +57,7 @@ public class atualizar_perfil extends Activity {
             @Override
             public void run() {
                 super.run();
-                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
             }
         };
         foto.run();
@@ -101,25 +105,27 @@ public class atualizar_perfil extends Activity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Connection connection = conexao.CONN();
-                if(connection != null)
+            HttpHandler sh = new HttpHandler();
+            String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/loadInfo.php?id=" + Login_Screen.sharedPref.getString("id", ""));
+            if(jsonStr != null)
                 {
-                    Statement stmt = connection.createStatement();
-                    final ResultSet rs = stmt.executeQuery("Select * from tblUsuario where IDUsuario = " + Login_Screen.sharedPref.getString("id",""));
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    final JSONArray jsonArray = jsonObject.getJSONArray("data");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
                             super.run();
                             try {
-                                if(rs != null && rs.next()) {
-                                    user.setText(rs.getString("username"));
-                                    nome.setText(rs.getString("nome"));
-                                    senha.setText(rs.getString("senha"));
-                                    email.setText(rs.getString("email"));
-                                    celular.setText(rs.getString("tel"));
-                                    bio.setText(rs.getString("descricao"));
+                                for (int i=0; i < jsonArray.length(); i++) {
+                                    JSONObject c = jsonArray.getJSONObject(i);
+                                    user.setText(c.getString("username"));
+                                    nome.setText(c.getString("nome"));
+                                    senha.setText(c.getString("senha"));
+                                    email.setText(c.getString("email"));
+                                    celular.setText(c.getString("tel"));
+                                    bio.setText(c.getString("descricao"));
                                 }
-                            } catch (SQLException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
@@ -139,11 +145,7 @@ public class atualizar_perfil extends Activity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Connection connection = conexao.CONN();
-                if(connection != null)
-                {
-                    Statement stmt = connection.createStatement();
-                    String teste = "Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id","");
+                HttpHandler sh = new HttpHandler();
                     SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
                     editor.putString("usu", String.valueOf(user.getText()));
                     editor.putString("email", String.valueOf(email.getText()));
@@ -156,8 +158,7 @@ public class atualizar_perfil extends Activity {
                     new HTTPServer(newpath + "-" + file.getName(), encodedImage).execute();
                     editor.putString("foto_perfil", newpath + "-" + file.getName());
                     editor.apply();
-                    stmt.executeUpdate("Update tblUsuario set username='" + user.getText() + "', nome='" + nome.getText() + "', senha='" + senha.getText() + "', email='" + email.getText() + "', tel='" + celular.getText() + "', caminho_imagem='" + Login_Screen.sharedPref.getString("foto_perfil","") + "', descricao='" + bio.getText() + "' where IDUsuario=" + Login_Screen.sharedPref.getString("id",""));
-                }
+                    sh.makeServiceCall("http://" + HttpHandler.IP + "/updateUser.php?id=" + Login_Screen.sharedPref.getString("id", "") +  "&user=" + user.getText() + "&nome=" + nome.getText() + "&email=" + email.getText() + "&senha=" + senha.getText() +  "&telefone=" + email.getText() + "&caminho_imagem=" + Login_Screen.sharedPref.getString("foto_perfil", "") + "&descricao=" + bio.getText());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -171,7 +172,6 @@ public class atualizar_perfil extends Activity {
             Glide.get(getApplicationContext()).clearMemory();
         }
     }
-    ClasseConexao conexao = new ClasseConexao();
     static Bitmap image;
     InputStream inputstream;
     static File file;

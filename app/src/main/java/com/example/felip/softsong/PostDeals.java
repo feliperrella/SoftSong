@@ -28,6 +28,9 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -48,7 +51,6 @@ public class PostDeals {
     public static class GetMyPosts extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
         Context cont;
         String tipoquery;
         public GetMyPosts(Context applicationContext, ListView posts, String type) {
@@ -61,43 +63,45 @@ public class PostDeals {
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connection con = conexao.CONN();
-                if (con == null) {
-                    message = "Error in connection with SQL server";
-                } else {
-                    String query = "";
+                HttpHandler sh = new HttpHandler();
+                    String url = "";
                     if(tipoquery.equals("all"))
-                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),(Select count(*) from tblCurtir where ID_Post = post.IDPost and ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + ") as likou ,usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post  left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario in (Select IDSeguindo from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ") group by post.IDPost DESC";
+                        url = "http://" + HttpHandler.IP +"/PostDeals.php?id=" + (Login_Screen.sharedPref.getString("id",""));
                     else if(tipoquery.equals("my"))
-                        query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),(Select count(*) from tblCurtir where ID_Post = post.IDPost and ID_Usuario =" + Login_Screen.sharedPref.getString("id","") + ") as likou,usu.username,usu.caminho_imagem, post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + " group by post.IDPost DESC";
-                     else if(tipoquery.equals("spec"))
-                         query = "Select (Select count(*) from tblCurtir where ID_Post = post.IDPost),(Select count(*) from tblCurtir where ID_Post = post.IDPost and ID_Usuario = " + Login_Screen.sharedPref.getString("id","") + ") as likou,usu.username,usu.caminho_imagem,post.ID_Usuario,post.IDPost, post.titulo, post.legenda, post.data_horario, midia.caminho_imagem from tblPost as post left join tblMidiaPost as midiapost on post.IDPost = midiapost.ID_Post left join tblMidia as midia on midiapost.ID_Midia = midia.IDMidia inner join tblUsuario as usu on post.ID_Usuario = usu.IDUsuario where post.ID_Usuario = (Select IDUsuario from tblUsuario where username = '" + Search.user + "') group by post.IDPost DESC";
-                     Statement stmt = con.createStatement();
-                     ResultSet rs = stmt.executeQuery(query);
-
+                        url = "http://" + HttpHandler.IP +"/PostDealsMy.php?id=" + (Login_Screen.sharedPref.getString("id",""));
+                    else if(tipoquery.equals("spec"))
+                        url = "http://" + HttpHandler.IP +"/PostDealsSpec.php?id=" + (Login_Screen.sharedPref.getString("id","")) + "&username=" + Search.user;
+                    String jsonStr = sh.makeServiceCall(url);
+                    Log.i("Feliperrella", jsonStr);
                     curtir.clear();
                     nomes.clear();
                     id.clear();
-                    titulos.clear();
                     legenda.clear();
                     likou.clear();
                     data.clear();
                     picture.clear();
-                    while(rs.next())
-                    {
-                        picture.add(rs.getString("caminho_imagem"));
-                        curtir.add(rs.getString("(Select count(*) from tblCurtir where ID_Post = post.IDPost)"));
-                        nomes.add(rs.getString("username") + "");
-                        id.add(rs.getString("IDPost"));
-                        titulos.add(rs.getString("titulo"));
-                        legenda.add(rs.getString("legenda"));
-                        data.add(rs.getString("data_horario"));
-                        likou.add(rs.getString("likou"));
+
+                if (jsonStr != null) {
+                    try {
+                        JSONObject jsonObj = new JSONObject(jsonStr);
+                        JSONArray info = jsonObj.getJSONArray("posts");
+                        for (int i = 0; i < info.length(); i++) {
+                            JSONObject c = info.getJSONObject(i);
+                            picture.add(c.getString("caminho_imagem"));
+                            curtir.add(c.getString("curtidas"));
+                            nomes.add(c.getString("username"));
+                            id.add(c.getString("IDPost"));
+                            legenda.add(c.getString("legenda"));
+                            data.add(c.getString("data_horario"));
+                            likou.add(c.getString("likou"));
+                        }
                     }
+                    catch (Exception e){}
+                }
                     //rs = null;
                     //isSuccess = true;
 
-                }
+
             } catch (Exception ex) {
                 isSuccess = false;
                 message = "Voce Ainda nao tem Posts";
@@ -166,7 +170,7 @@ public class PostDeals {
                 @Override
                 public void run() {
                     super.run();
-                    new picid("Select caminho_imagem from tblMidia where IDMidia in (Select ID_Midia from tblMidiaPost where ID_Post =" + id.get(i) + ")", pub, context).execute();
+                    new picid(id.get(i), pub, context).execute();
                 }
             };
             t.run();
@@ -252,7 +256,6 @@ public class PostDeals {
     static class picid extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
         String query;
         ViewPager pubs;
         Context cont;
@@ -268,21 +271,23 @@ public class PostDeals {
         protected String doInBackground(String... params) {
             images = null;
             try {
-                Connection con = conexao.CONN();
-                if (con == null) {
-                    message = "Error in connection with SQL server";
-                } else {
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(query);
+                String url = "http://" + HttpHandler.IP + "/getPicturesPost.php?id="+query;
+                Log.i("Feliperrella", url);
+                HttpHandler sh = new HttpHandler();
+                String jsonStr = sh.makeServiceCall(url);
+                Log.i("Feliperrella", jsonStr);
+                if (jsonStr != null) {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray info = jsonObj.getJSONArray("data");
                     String im = "";
-                    rs.beforeFirst();
-                    while(rs.next())
-                    {
-                        im = im + rs.getString("caminho_imagem") + ",";
+                    for (int i = 0; i < info.length(); i++) {
+                        JSONObject c = info.getJSONObject(i);
+                        im = im + c.getString("caminho_imagem") + ",";
                     }
                     im = im.substring(0, im.length() - 1);
                     images = im.split(",");
-                    isSuccess = true; }
+                    isSuccess = true;
+                }
             } catch (Exception ex) { isSuccess = false;message = "Hmm";
             }
             return message; }
@@ -342,7 +347,7 @@ public class PostDeals {
                                             @Override
                                             public void run() {
                                                 super.run();
-                                                Glide.with(activity.getApplicationContext()).load("http://192.168.15.17/pictures/" + imagess[position]).override(600, 200).into(images);
+                                                Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + imagess[position]).override(600, 200).into(images);
                                             }
                                         };
                                         x.run();
@@ -362,7 +367,7 @@ public class PostDeals {
                             final VideoView video = (VideoView) itemView.findViewById(R.id.imgvid);
                             try {
                                 if(!video.isPlaying()) {
-                                    Uri uri = Uri.parse("http://192.168.15.17/pictures/" + imagess[position]);
+                                    Uri uri = Uri.parse("http://" + HttpHandler.IP + "/pictures/" + imagess[position]);
                                     video.setVideoURI(uri);
                                 }
 
@@ -400,7 +405,7 @@ public class PostDeals {
                                 @Override
                                 public void run() {
                                     super.run();
-                                    mp[0] = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://192.168.15.17/pictures/" + imagess[position]));
+                                    mp[0] = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://" + HttpHandler.IP + "/pictures/" + imagess[position]));
                                 }
                             };
                             x.run();
@@ -428,7 +433,7 @@ public class PostDeals {
                             pic.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    new DownloadFileFromURL("http://192.168.15.17/pictures/" + imagess[position], activity).execute();
+                                    new DownloadFileFromURL("http://" + HttpHandler.IP + "/pictures/" + imagess[position], activity).execute();
                                 }
                             });
                             Thread t = new Thread()
@@ -553,7 +558,6 @@ public class PostDeals {
 
     static class LikeDeslike extends AsyncTask<String, String, String>
     {
-        ClasseConexao conexao = new ClasseConexao();
         String ID;
         String n;
         TextView nlikess;
@@ -565,13 +569,11 @@ public class PostDeals {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Connection con = conexao.CONN();
-                if (con != null) {
-                    String a = "Call likedeslike(" + Login_Screen.sharedPref.getString("id", "") + "," + ID + ");";
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(a);
-                    if(rs != null && rs.next())
-                        n = rs.getString("COUNT(*)");
+                HttpHandler sh = new HttpHandler();
+                String url = "http://" + HttpHandler.IP + "/LikeDeslike.php?id=" + Login_Screen.sharedPref.getString("id", "") + "&post=" + ID;
+                String ret = sh.makeServiceCall(url);
+                if (ret != null) {
+                        n = ret;
                     Thread t = new Thread(){
                         @Override
                         public void run() {
@@ -596,7 +598,6 @@ public class PostDeals {
 
     static class getComments extends AsyncTask<String,String,String>
     {
-        ClasseConexao conexao = new ClasseConexao();
         String idhere, o, come;
         ListView l;
         Context contextx;
@@ -613,22 +614,21 @@ public class PostDeals {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Connection connection = conexao.CONN();
-                if(connection != null)
-                {
+                final HttpHandler sh = new HttpHandler();
                     comments.clear();
                     data_horario.clear();
                     username.clear();
                     caminho_.clear();
-                    final Statement stmt = connection.createStatement();
                     if(o == "get") {
-                        ResultSet rs = stmt.executeQuery("select com.comentario, com.IDComentario, com.data_horario, usu.username, usu.caminho_imagem from tblComentario as com inner join tblUsuario as usu on com.ID_Usuario = usu.IDUsuario where com.ID_Post = " + idhere);
-                        rs.beforeFirst();
-                        while (rs.next()) {
-                            comments.add(rs.getString("comentario"));
-                            data_horario.add(rs.getString("data_horario"));
-                            username.add(rs.getString("username"));
-                            caminho_.add(rs.getString("caminho_imagem"));
+                        String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/getComments.php?id=" + idhere);
+                        JSONObject jsonObj = new JSONObject(jsonStr);
+                        JSONArray info = jsonObj.getJSONArray("data");
+                        for (int i = 0; i < info.length(); i++) {
+                            JSONObject c = info.getJSONObject(i);
+                            comments.add(c.getString("comentario"));
+                            data_horario.add(c.getString("data_horario"));
+                            username.add(c.getString("username"));
+                            caminho_.add(c.getString("caminho_imagem"));
                         }
                         customA adapter = new customA(contextx);
                         l.setAdapter(adapter);
@@ -642,8 +642,7 @@ public class PostDeals {
                             public void run() {
                                 super.run();
                                 try {
-                                    String a = "{call addComment(" + Login_Screen.sharedPref.getString("id", "") + ", " + idhere + ", '" + come + "','" + dateFormat.format(date) + "')}";
-                                    stmt.executeQuery(a);
+                                    sh.makeServiceCall("http://" + HttpHandler.IP + "/addComment.php?id=" + (Login_Screen.sharedPref.getString("id", "")) + "&post=" + idhere + "&comment=" + come + "&date=" + dateFormat.format(date));
                                     new getComments("get", idhere, l, contextx, come).execute();
                                 }
                                 catch (Exception e){}
@@ -652,7 +651,7 @@ public class PostDeals {
                         t.run();
 
                     }
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -690,12 +689,12 @@ public class PostDeals {
             final TextView txt = view.findViewById(R.id.comm);
             final ImageView img = view.findViewById(R.id.perfilComment);
             final TextView hor = view.findViewById(R.id.commhor);
-            Glide.with(view.getContext()).load("http://192.168.15.17/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
+            Glide.with(view.getContext()).load("http://" + HttpHandler.IP + "/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
             Thread x = new Thread(){
                 @Override
                 public void run() {
                     super.run();
-                    String a = "http://192.168.15.17/pictures/" + caminho_.get(i);
+                    String a = "http://"+ HttpHandler.IP + "/pictures/" + caminho_.get(i);
                     txt.setText(username.get(i) + ": " + comments.get(i));
                     hor.setText(data_horario.get(i));
                 }
@@ -706,7 +705,7 @@ public class PostDeals {
     }
 
 
-    private static ArrayList<String> picture = new ArrayList<>(),curtir = new ArrayList<>(), nomes = new ArrayList<>(), titulos = new ArrayList<>(),legenda = new ArrayList<>(),id = new ArrayList<>();
+    private static ArrayList<String> picture = new ArrayList<>(),curtir = new ArrayList<>(), nomes = new ArrayList<>(),legenda = new ArrayList<>(),id = new ArrayList<>();
     static ArrayList<String> data = new ArrayList<>();
     static ArrayList<String> comments = new ArrayList<>(), data_horario = new ArrayList<>(), username = new ArrayList<>(), caminho_ = new ArrayList<>(), likou = new ArrayList<>();
     private static String[] images = null;

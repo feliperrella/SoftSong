@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -21,6 +22,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -79,16 +83,16 @@ public class Public_Perfil extends Activity{
                 {
                     seguir.setText("S E G U I N D O");
                     seguir.startAnimation(animation);
-                    q =  "Insert into tblSeguir values(" + Login_Screen.sharedPref.getString("id", "") + ", " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";
-                    new Segue().execute();
+                    String q =  "http://" + HttpHandler.IP + "/Interacoes.php?type=follow&user=" + Search.user + "&id=" + Login_Screen.sharedPref.getString("id", "");
+                    new Segue(q).execute();
                     new GetMyFollows().execute();
                 }
                 else if(seguir.getText().toString().equals("S E G U I N D O"))
                 {
                     seguir.setText("S E G U I R");
                     seguir.startAnimation(animation);
-                    q =  "Delete from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguindo = " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"')";
-                    new Segue().execute();
+                    String q =  "http://" + HttpHandler.IP + "/Interacoes.php?type=unfollow&user=" + Search.user + "&id=" + Login_Screen.sharedPref.getString("id", "");
+                    new Segue(q).execute();
                     new GetMyFollows().execute();
                 } }
         });
@@ -96,13 +100,13 @@ public class Public_Perfil extends Activity{
         bloquear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //HttpHandler sh = new HttpHandler();
                 if(bloquear.getText().toString().equals("B L O Q U E A R"))
                 {
                     bloquear.startAnimation(animation);
                     bloquear.setText("B L O Q U E A D O");
-                    q =  "Delete from tblSeguir where IDSeguidor =" + Login_Screen.sharedPref.getString("id", "") + " and IDSeguido = (Select IDUsuario from tblUsuario where username ='" + Search.user + "') ";
-                    new Segue().execute();
-                    q = "Insert into tblBloqueio values(" + Login_Screen.sharedPref.getString("id", "") + ", " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";//
+                    String q =  "http://" + HttpHandler.IP + "/blockProcedure.php?user=" + Search.user + "&id=" + Login_Screen.sharedPref.getString("id", "");
+                    new Segue(q).execute();
                     new GetMyFollows().execute();
                 }
                 else if(bloquear.getText().toString().equals("B L O Q U E A D O"))
@@ -111,8 +115,9 @@ public class Public_Perfil extends Activity{
                     bloquear.setText("B L O Q U E A R");
                     seguir.setEnabled(true);
                     seguir.setBackgroundResource(R.drawable.button_follow_background);
-                    q =  "Delete from tblBloqueio where IDBloqueador = " + Login_Screen.sharedPref.getString("id", "") + " and IDBloqueado = " + "(Select IDUsuario from tblUsuario where username ='" + Search.user +"')";
-                    new Segue().execute();
+                    //sh.makeServiceCall("http://" + HttpHandler.IP + "/Interacoes.php?type=desbloquear&user=" + Search.user + "&id=" + Login_Screen.sharedPref.getString("id", ""));
+                    String q = "http://" + HttpHandler.IP + "/Interacoes.php?type=desbloquear&user=" + Search.user + "&id=" + Login_Screen.sharedPref.getString("id", "");
+                    new Segue(q).execute();
                     new GetMyFollows().execute();
                 }
             }
@@ -147,24 +152,24 @@ public class Public_Perfil extends Activity{
 
 
     class Segue extends AsyncTask<String, String, String> {
-        String message = "";
-        Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
+        String url;
+        public Segue(String q) {
+            url = q;
+        }
+
         @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... params) {
 
                     try {
-                        Connection con = conexao.CONN();
-                        if (con == null) {
-                            message = "Error in connection with SQL server";
-                        } else {
-                            Statement stmt = con.createStatement();
-                            stmt.executeUpdate(q);
-                            isSuccess = true; }
-                    } catch (Exception ex) { isSuccess = false;message = "Hmm";
+                        HttpHandler sh = new HttpHandler();
+                        sh.makeServiceCall(url);
                     }
-            return message; }
+                    catch (Exception ex) {
+
+                    }
+                return null;
+        }
         @Override
         protected void onPostExecute(String r) { }}
 
@@ -173,32 +178,24 @@ public class Public_Perfil extends Activity{
     public class GetMyFollows extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
         @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connection con = conexao.CONN();
-                if (con == null) {
-                    message = "Error in connection with SQL server";
-                } else {
-                    String sub1 = "(Select Count(IDSeguidor) from tblSeguir where IDSeguidor = (Select IDUsuario from tblUsuario where username ='" + Search.user + "'))";
-                    String sub2 = "(Select Count(IDSeguindo) from tblSeguir where IDSeguindo = (Select IDUsuario from tblUsuario where username ='" + Search.user +"'))";
-                    String sub3 = "(Select IDBloqueado from tblBloqueio where IDBloqueador = " + Login_Screen.sharedPref.getString("id", "") + " and IDBloqueado = (Select IDUsuario from tblUsuario where username ='" + Search.user + "'))";
-                    String sub4 = "(Select IDSeguindo from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id", "") + " and IDSeguindo = (Select IDUsuario from tblUsuario where username = '" + Search.user + "'))";
-                    String sub5 = "(Select descricao from tblUsuario where username = '" + Search.user + "')";
-                    String sub6 = "(select nome from tblUsuario where username = '" + Search.user + "')";
-                    String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "," + sub4 + "," + sub5 + "," + sub6 + " from tblPost where ID_Usuario = (Select IDUsuario from tblUsuario where username ='" + Search.user + "')";
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(query);
-                    if(rs != null && rs.next()){
+                HttpHandler sh = new HttpHandler();
+                    String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/PublicPerfil.php?id=" + Login_Screen.sharedPref.getString("id", "") + "&user=" + Search.user);
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    Log.i("Feliperrella", jsonStr);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject rs = jsonArray.getJSONObject(i);
                         a = (rs.getString("Count(*)"));
-                        b = (rs.getString(sub1));
-                        c = (rs.getString(sub2));
-                        d = (rs.getString(sub3));
-                        e = (rs.getString(sub4));
-                        f = (rs.getString(sub5));
-                        h = (rs.getString(sub6));
+                        b = (rs.getString("seguindo"));
+                        c = (rs.getString("seguidores"));
+                        d = (rs.getString("bloqueado"));
+                        e = (rs.getString("sigo"));
+                        f = (rs.getString("descr"));
+                        h = (rs.getString("nome"));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -220,7 +217,7 @@ public class Public_Perfil extends Activity{
 
                     }
                     isSuccess = true;
-                }
+
             } catch (Exception ex) {
                 isSuccess = false;
                 message = "Falha ao conectar-se ao banco :(";
@@ -235,17 +232,21 @@ public class Public_Perfil extends Activity{
             TextView bio = findViewById(R.id.txtBio);
             bio.setText(f);
             final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadein);
-            if(d != null)
+            if(d != "0")
             {
-                bloquear.startAnimation(animation);
-                bloquear.setText("B L O Q U E A D O");
-                seguir.setEnabled(false);
-                seguir.setBackgroundColor(Color.parseColor("#BDCCC2"));
+                if(d != "null") {
+                    bloquear.startAnimation(animation);
+                    bloquear.setText("B L O Q U E A D O");
+                    seguir.setEnabled(false);
+                    seguir.setBackgroundColor(Color.parseColor("#BDCCC2"));
+                }
             }
-            if(e != null)
+            if(e != "0")
             {
-                seguir.startAnimation(animation);
-                seguir.setText("S E G U I N D O");
+                if(d != "null") {
+                    seguir.startAnimation(animation);
+                    seguir.setText("S E G U I N D O");
+                }
             }
 
         }
@@ -284,5 +285,5 @@ public class Public_Perfil extends Activity{
     TextView mypubs, follows, followings, nome;
     Button seguir, bloquear;
     LinearLayout bt0, bt1, bt2;
-    String a,b,c,d,e,f,q,h;
+    String a,b,c,d,e,f,h;
 }

@@ -49,18 +49,12 @@ public class Configs extends Activity {
     public class DoLogin extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
         @Override
         protected String doInBackground(String... params) {
 
                 try {
-                    Connection con = conexao.CONN();
-                    if (con == null) {
-                        message = "Error in connection with SQL server";
-                    } else {
+
                         String query = "delete from tblUsuario where IDUsuario = " + Login_Screen.sharedPref.getString("id","");
-                        Statement stmt = con.createStatement();
-                        stmt.executeUpdate(query);
                         message =  "Conta excluida com sucesso :(";
                         SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
                         editor.clear();
@@ -69,7 +63,7 @@ public class Configs extends Activity {
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                         finish();
-                    }
+
                 } catch (Exception ex) {
                     isSuccess = false;
                     message = "Desculpe, algo deu errado.";

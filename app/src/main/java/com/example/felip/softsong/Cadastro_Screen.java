@@ -26,6 +26,7 @@ import android.support.v7.widget.CardView;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -37,6 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -166,72 +169,17 @@ public class Cadastro_Screen extends Activity {
     }
 
     public class Cadastra extends AsyncTask<String, String, String> {
-        ClasseConexao classeConexao = new ClasseConexao();
         String message = "";
         Boolean isSuccess = false;
 
         @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... params) {
-            try {
-                Connection con = classeConexao.CONN();
-                if (con == null) {
-                    message = "Erro na Conexao";
-                } else {
-                    String query = "select (Select IDUsuario from tblUsuario order by IDUsuario DESC limit 1) as counter, username, email from tblUsuario";
-                    String vemail = "Select * from tblUsuario where email = '" + Email + "'";
-                    String veuser = "Select * from tblUsuario where username = '" + nome + "'";
-                    Statement stmt = con.createStatement();
-                    rs = stmt.executeQuery(query);
-                    if(rs != null && rs.next()){
-                        count = rs.getInt("counter");
-                    }
-                    rs = stmt.executeQuery(vemail);
-                    if(rs != null && rs.next()){
-                        Verifica_Email = rs.getString("email");
-                    }
-                    rs = stmt.executeQuery(veuser);
-                    if(rs != null && rs.next()){
-                        Verifica_User = rs.getString("username");
-                    }
-
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage().toString());
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-
-            }
-            if(Verifica_Email != null || Verifica_User != null)
-            {
-                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_anim);
-                String Aviso = "";
-                if(Verifica_Email != null && Verifica_User != null)
-                {
-                    txtEmail.startAnimation(animation);
-                    txtNome.startAnimation(animation);
-                    Aviso = "Usuario e email ja em uso, tente novamente";
-                }
-                else if(Verifica_Email != null) {
-                    txtEmail.startAnimation(animation);
-                    Aviso = "Email ja em uso, tente novamente";
-                }
-                else if(Verifica_User != null) {
-                    txtNome.startAnimation(animation);
-                    Aviso = "Usuario ja em uso, tente novamente";
-                }
-                Verifica_User = null;
-                Verifica_Email = null;
-                //Toast.makeText(getApplicationContext(), Aviso, Toast.LENGTH_LONG).show();
-                return Aviso;
-            }
-            else {
                 count += 1;
-                query = "Insert into tblUsuario() values(" + count + ",'" + nome + "','" + senha + "','" + Email + "','2019-02-26',' ',' ',' ','" + nm + "',' ','" + (count + 1) + ".jpg')";
+                //query = "Insert into tblUsuario() values(" + count + ",'" + nome + "','" + senha + "','" + Email + "','2019-02-26',' ',' ',' ','" + nm + "',' ','" + (count + 1) + ".jpg')";
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 image.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
                 String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-                new HTTPServer(Integer.toString(count + 1) + "." + FilenameUtils.getExtension(String.valueOf(file)), encodedImage).execute();
                 //SocketsClientUpload socket = new SocketsClientUpload(sftpCaminho);
                       //socket.run();
 //                    ApacheFTPClient apache = new ApacheFTPClient();
@@ -239,36 +187,42 @@ public class Cadastro_Screen extends Activity {
 //                    apache.Cadastro(file, Cadastro_Screen.this, (count + 1));
 
                 try {
-                    Connection conne = classeConexao.CONN();
-                    if (conne == null) {
-                        message = "Erro na Conexao.";
-                    } else {
-                        Statement st = conne.createStatement();
-                        countt = st.executeUpdate(query);
+                    HttpHandler sh = new HttpHandler();
+                    // Making a request to url and getting response
+                    String url = "http://" + HttpHandler.IP +"/InserirCadastro.php?user=" + nome + "&email=" + Email + "&nome=" + nm + "&senha=" + senha + "&caminho=" + (count + 1) + ".jpg";
+                    Log.i("Feliperrella", url);
+                    String jsonStr = sh.makeServiceCall(url);
+                    Log.i("Feliperrella", jsonStr);
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray info = jsonObj.getJSONArray("result");
+                    for (int i = 0; i < info.length(); i++) {
+                        JSONObject c = info.getJSONObject(i);
+
                         message = "Cadastro Realizado com sucesso";
                         SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
-                        editor.putString("id",count + "");
-                        editor.putString("usu",nome);
+                        editor.putString("id", c.getString("is"));
+                        editor.putString("usu", nome);
+                        idd = c.getString("is");
                         editor.putString("email", Email);
-                        editor.putString("foto_perfil", (count+1) + ".jpg");
-                        editor.commit();
+                        editor.putString("foto_perfil", c.getString("is") + ".jpg");
+                        editor.apply();
+                        Log.i("Feliperrella", Login_Screen.sharedPref.getString("usu",""));
                     }
-                } catch (SQLException e) {
+                    new HTTPServer((idd) + "." + FilenameUtils.getExtension(String.valueOf(file)), encodedImage).execute();
+
+                } catch (Exception e) {
                     System.out.println(e.getMessage().toString());
                     e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-
                 }
                 return message;
-            }
+
         }
 
 
 
         @Override
         protected void onPostExecute(String r) {
-            if(countt != 0)
-            {
+
                 pb.animate().alpha(0f)
                         .setDuration(250)
                         .setListener(new AnimatorListenerAdapter() {
@@ -288,11 +242,6 @@ public class Cadastro_Screen extends Activity {
                         startActivity(Home, ActivityOptions.makeSceneTransitionAnimation(Cadastro_Screen.this).toBundle());
                     }
                 }, 1400);
-            }
-            else
-            {
-
-            }
 
             }
 
@@ -330,4 +279,5 @@ public class Cadastro_Screen extends Activity {
                 })
                 .start();
     }
+    String idd = "";
     }

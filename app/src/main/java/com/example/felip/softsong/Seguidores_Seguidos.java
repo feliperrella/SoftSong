@@ -14,6 +14,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -32,26 +35,24 @@ public class Seguidores_Seguidos extends Activity {
 
     class load extends AsyncTask<String,String,String>
     {
-        ClasseConexao conexao = new ClasseConexao();
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Connection connection = conexao.CONN();
-                if(connection != null)
-                {
+                HttpHandler sh = new HttpHandler();
                     user.clear();
                     foto.clear();
                     name.clear();
-                    Statement stmt = connection.createStatement();
-                    ResultSet rs = stmt.executeQuery(Op == "seguidos" ? "Select username, nome, caminho_imagem from tblUsuario where IDUsuario in (Select IDSeguindo from tblSeguir where IDSeguidor = (Select IDUsuario from tblUsuario where username = '" + usu + "'))" : "Select username, nome, caminho_imagem from tblUsuario where IDUsuario in (Select IDSeguidor from tblSeguir where IDSeguindo = (Select IDUsuario from tblUsuario where username = '" + usu + "'))");
-                    rs.beforeFirst();
-                    while(rs.next())
+                    String jsonStr = sh.makeServiceCall(Op == "seguidos" ? "http://" + HttpHandler.IP + "/Seguidores_Seguidos.php?type=seguidos&user=" + usu : "http://" + HttpHandler.IP + "/Seguidores_Seguidos.php?type=seguidores&user=" + usu);
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for(int i = 0; i < jsonArray.length(); i++)
                     {
+                        JSONObject rs = jsonArray.getJSONObject(i);
                         user.add(rs.getString("username"));
                         foto.add(rs.getString("caminho_imagem"));
                         name.add(rs.getString("nome"));
                     }
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,7 +99,7 @@ public class Seguidores_Seguidos extends Activity {
                 @Override
                 public void onClick(View view) {
                     Search.user = (String) usu.getText();
-                    Search.cami = "http://192.168.15.17/pictures/" + foto.get(i);
+                    Search.cami = "http://" + HttpHandler.IP + "/pictures/" + foto.get(i);
                     //Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
                     Intent my = new Intent(Seguidores_Seguidos.this, Public_Perfil.class);
                     startActivity(my);
@@ -107,7 +108,7 @@ public class Seguidores_Seguidos extends Activity {
             try {
                 nome.setText(name.get(i));
                 usu.setText(user.get(i));
-                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + foto.get(i)).into(per);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + foto.get(i)).into(per);
             }
             catch (Exception e){}
             return vieww;

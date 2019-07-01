@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -81,7 +85,7 @@ public class Perfil extends Activity {
             @Override
             public void run() {
                 super.run();
-                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
             }
         };
         t.run();
@@ -144,26 +148,20 @@ public class Perfil extends Activity {
     public class GetMyFollows extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
+        HttpHandler sh = new HttpHandler();
         @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connection con = conexao.CONN();
-                if (con == null) {
-                    message = "Error in connection with SQL server";
-                } else {
-                    String sub1 = "(Select Count(*) from tblSeguir where IDSeguidor = " + Login_Screen.sharedPref.getString("id","") + ")";
-                    String sub2 = "(Select Count(*) from tblSeguir where IDSeguindo =" + Login_Screen.sharedPref.getString("id","") +")";
-                    String sub3 = "(Select nome from tblUsuario where IDUsuario = " + Login_Screen.sharedPref.getString("id","") + ")";
-                    String query = "select Count(*)," + sub1 + "," + sub2 + "," + sub3 + "from tblPost where ID_Usuario = " + Login_Screen.sharedPref.getString("id","");
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(query);
-                    if(rs != null && rs.next()){
+                    String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/MyPerfil.php?id=" + Login_Screen.sharedPref.getString("id",""));
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        JSONObject rs = jsonArray.getJSONObject(i);
                         a = (rs.getString("Count(*)"));
-                        b = (rs.getString(sub1));
-                        c = (rs.getString(sub2));
-                        d = (rs.getString(sub3));
+                        b = (rs.getString("seguindo"));
+                        c = (rs.getString("seguidores"));
+                        d = (rs.getString("nome"));
                         runOnUiThread(new Runnable() {
 
                             @Override
@@ -177,7 +175,7 @@ public class Perfil extends Activity {
                         
                     }
                     isSuccess = true;
-                }
+
             } catch (Exception ex) {
                 isSuccess = false;
                 message = "Voce Ainda nao tem Posts";

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -49,8 +50,9 @@ public class Home_Screen extends Activity{
                 Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
                 getWindow().setEnterTransition(fade);
                 posts = findViewById(R.id.posts);
+                Log.i("Feliperrella", Login_Screen.sharedPref.getString("usu", ""));
                 new PostDeals.GetMyPosts(this, posts, "all").execute();
-                new Not().execute();
+                //new Not().execute();
                 bmb = findViewById(R.id.bmb);
                 for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
                     SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder().normalImageRes(picId[i]).listener(new OnBMClickListener() {
@@ -103,15 +105,6 @@ public class Home_Screen extends Activity{
                                     {
                                         @Override
                                         public void run() {
-                                            Intent x = new Intent(Home_Screen.this, NotiSeguidor.class);
-                                            startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
-                                        }}, 700);
-                                    break;
-                                case 5:
-                                    new Handler().postDelayed(new Runnable()
-                                    {
-                                        @Override
-                                        public void run() {
                                             Intent x = new Intent(Home_Screen.this, ConectionActivity.class);
                                             startActivity(x, ActivityOptions.makeSceneTransitionAnimation(Home_Screen.this).toBundle());
                                         }}, 700);
@@ -124,7 +117,7 @@ public class Home_Screen extends Activity{
                     bmb.addBuilder(builder);
                     bmb.bringToFront();
                 }
-                Glide.with(this).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).asBitmap().into(new SimpleTarget<Bitmap>() {
+                Glide.with(this).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).asBitmap().into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         b = resource;
@@ -142,50 +135,6 @@ public class Home_Screen extends Activity{
         super.onDestroy();
     }
 
-    @SuppressLint("StaticFieldLeak")
-    class Not extends AsyncTask<String,String,String>
-    {
-        ClasseConexao conexao = new ClasseConexao();
-        @SuppressLint("WrongThread")
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                Connection connection = conexao.CONN();
-                if(connection != null)
-                {
-                    Statement stmt = connection.createStatement();
-                    ResultSet rs = stmt.executeQuery("Select Count(*) from tblSeguir where IDSeguindo = " + Login_Screen.sharedPref.getString("id",""));
-                    if(rs != null && rs.next())
-                    {
-                        SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
-                        int n = rs.getInt("Count(*)");
-                        int nS = 0;
-                        if(Login_Screen.sharedPref.contains("not"))
-                            nS = Login_Screen.sharedPref.getInt("not", 0);
-                        else
-                            editor.putInt("not", 0);
-                        sub = n - nS >= 0 ? n -nS : 0;
-                        if(n > nS)
-                        {
-                            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink_anim_infinit);
-                            noti.startAnimation(animation);
-                            editor.putInt("not", n);
-                            editor.apply();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }
-
     public static int sub;
     ImageView noti;
     ListView posts;
@@ -193,7 +142,7 @@ public class Home_Screen extends Activity{
     Bitmap b;
     GoogleApiClient mGoogleApiClient;
     String NodeID;
-    int[] picId = {R.drawable.ico_uso, R.drawable.ico_mais,R.drawable.ico_search, R.drawable.ic_send,R.drawable.ico_notification, R.drawable.watch};
+    int[] picId = {R.drawable.ico_uso, R.drawable.ico_mais,R.drawable.ico_search, R.drawable.ic_send, R.drawable.watch};
 }
 
 

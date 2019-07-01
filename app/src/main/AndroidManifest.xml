@@ -57,7 +57,6 @@
         <activity android:name=".Search" />
         <activity android:name=".Configs" />
         <activity android:name=".AddPost" />
-        <activity android:name=".NotiSeguidor" />
         <activity android:name=".Chats_Index" />
         <activity android:name=".Posts_Holder" />
         <activity android:name=".ConectionActivity" />

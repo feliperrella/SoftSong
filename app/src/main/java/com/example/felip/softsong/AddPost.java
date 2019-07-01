@@ -17,6 +17,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +31,9 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -277,23 +281,23 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
 
     public class post extends AsyncTask<String,String,String>
     {
-        ClasseConexao conexao = new ClasseConexao();
         ArrayList<String> imagess;
         public post(ArrayList<String> images) {
             imagess = images;
+            Log.i("Feliperrella", "olha saporra:" + imagess);
         }
 
-        @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Connection connection = conexao.CONN();
-                if(connection != null)
-                {
-                    final Statement stmt = connection.createStatement();
-                    for(int i = 0; i < imagess.size(); i++)
+                final HttpHandler sh = new HttpHandler();
+                    for(int i = 0; i <= imagess.size(); i++)
                     {
-                        final ResultSet rs = stmt.executeQuery("Select Count(*) from tblPost");
+                        final String rs = sh.makeServiceCall("http://" + HttpHandler.IP + "/CountPosts.php");
+                        Log.i("Feliperrella", rs + "socorro");
+                        JSONObject jsonObject = new JSONObject(rs);
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                        final JSONObject c = jsonArray.getJSONObject(0);
                         final String[] h = {""};
                         final String g = h[0];
                         final String[] base64File = {""};
@@ -311,15 +315,16 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                                 @Override
                                 public void run() {
                                     try {
-                                        if(rs != null && rs.next())
-                                            h[0] = rs.getString("Count(*)");
+                                        if(rs != null)
+                                            h[0] = c.getString("count(*)");
                                         byte fileData[] = new byte[(int) file.length()];
                                         imageInFile.read(fileData);
                                         base64File[0] = Base64.encodeToString(fileData, Base64.DEFAULT);
                                         String path = ((h[0] + 1) + "-" + finalName.substring(finalName.lastIndexOf("/"), finalName.length())).replace("/","");
                                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                        Log.i("Feliperrella", "path: " + path);
                                         Date date = new Date();
-                                        stmt.executeQuery("{CALL Adiciona_posts(" + Login_Screen.sharedPref.getString("id","") + ",'" + desc.getText() + "','" + dateFormat.format(date) + "','" + path + "'," + finalI +")}");
+                                        sh.makeServiceCall("http://" + HttpHandler.IP + "/addPost.php?id=" + Login_Screen.sharedPref.getString("id","") + "&desc=" + desc.getText() + "&date=" + dateFormat.format(date) + "&path=" + path + "&final=" + finalI);
                                         System.out.println(finalI);
                                         new HTTPServer(path, base64File[0]).execute();
                                     }
@@ -338,7 +343,7 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                     }
                     //stmt.executeUpdate("");
 
-                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

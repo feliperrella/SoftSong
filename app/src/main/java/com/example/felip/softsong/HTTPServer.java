@@ -32,7 +32,7 @@ public class HTTPServer extends AsyncTask <Void, Void, Void> {
         dataToSend.add(new BasicNameValuePair("image", code));dataToSend.add(new BasicNameValuePair("name", nome));
         HttpParams httpRequestParams = getHttpRequestParams();
         HttpClient client = new DefaultHttpClient(httpRequestParams);
-        HttpPost post = new HttpPost("http://192.168.15.17/SavePicture.php");
+        HttpPost post = new HttpPost("http://" + HttpHandler.IP + "/SavePicture.php");
         try {
           post.setEntity(new UrlEncodedFormEntity(dataToSend));
             client.execute(post);

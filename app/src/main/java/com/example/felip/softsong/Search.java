@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -54,23 +57,21 @@ public class Search  extends Activity {
     public class GetMyPeople extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
         @SuppressLint("WrongThread")
         @Override
         protected String doInBackground(String... params) {
             try {
-                Connection con = conexao.CONN();
-                if (con == null) {
-                    message = "Error in connection with SQL server";
-                } else {
+                HttpHandler sh = new HttpHandler();
+
                         System.out.println(search.getText());
-                        String query = "Select * from tblUsuario where nome like '" + search.getText() + "%' or username like '" + search.getText() + "%'";
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery(query);
+                        String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/Search.php?user=" + search.getText());
+                        JSONObject jsonObject = new JSONObject(jsonStr);
+                        JSONArray jsonArray = jsonObject.getJSONArray("data");
                         String user = "";
                         String foto = "";
                         String name = "";
-                        while (rs.next()) {
+                        for(int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject rs = jsonArray.getJSONObject(i);
                             user = user + rs.getString("username") + ",";
                             foto = foto + rs.getString("caminho_imagem") + ",";
                             name = name + rs.getString("nome") + ",";
@@ -84,7 +85,6 @@ public class Search  extends Activity {
 
 
                         isSuccess = true;
-                    }
             } catch (Exception ex) {
                 isSuccess = false;
                 message = "Algo deu errado :(";
@@ -151,7 +151,7 @@ public class Search  extends Activity {
                 public void onClick(View view) {
                     user = (String) usu.getText();
                     try {
-                        cami = "http://192.168.15.17/pictures/" + ft[i];
+                        cami = "http://" + HttpHandler.IP + "/pictures/" + ft[i];
                     }
                     catch (Exception e){}
                     //Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
@@ -162,7 +162,7 @@ public class Search  extends Activity {
             try {
                 name.setText(nm[i]);
                 usu.setText(pe[i]);
-                Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + ft[i]).into(per);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + ft[i]).into(per);
             }
             catch (Exception e){}
             return view;

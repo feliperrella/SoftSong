@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.Fade;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -27,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gelitenight.waveview.library.WaveView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -185,7 +189,6 @@ public class Login_Screen extends AppCompatActivity {
     public class DoLogin extends AsyncTask<String, String, String> {
         String message = "";
         Boolean isSuccess = false;
-        ClasseConexao conexao = new ClasseConexao();
         String userid = txtLogin.getText().toString();
         String password = txtSenha.getText().toString();
         @Override
@@ -194,30 +197,42 @@ public class Login_Screen extends AppCompatActivity {
                 message = "Insira seu Usuario e Senha.";
             else {
                 try {
-                    conexao = new ClasseConexao();
-                        Connection con = conexao.CONN();
-                        String query = "select * from tblUsuario where username='" + userid + "' and senha='" + password + "'";
-                        Statement stmt = con.createStatement();
-                        ResultSet rs = stmt.executeQuery(query);
-                        if (rs.next()) {
-                            message = "Login para " + userid;
-                            isSuccess = true;
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("usu",userid);
-                            editor.putString("id", rs.getString("IDUsuario"));
-                            editor.putString("desc", rs.getString("descricao"));
-                            editor.putString("email", rs.getString("email"));
-                            editor.putString("foto_perfil", rs.getString("caminho_imagem"));
-                            editor.apply();
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Intent myIntent = new Intent(Login_Screen.this, Home_Screen.class);
-                                    View sharedImage = findViewById(R.id.logoSplash);
-                                    ActivityOptions activityOptions = (ActivityOptions) ActivityOptions.makeSceneTransitionAnimation(Login_Screen.this, sharedImage, "logo");
-                                    startActivity(myIntent, activityOptions.toBundle());
-                                }
-                            });
-                        } else {
+                    HttpHandler sh = new HttpHandler();
+                    // Making a request to url and getting response
+                    String url = "http://" + HttpHandler.IP +"/DBConnect.php?nome=" + userid + "&senha=" + password;
+                    Log.i("Feliperrella", url);
+                    String jsonStr = sh.makeServiceCall(url);
+                    Log.i("Feliperrella", jsonStr);
+                    if (jsonStr != null) {
+                        try {
+                            JSONObject jsonObj = new JSONObject(jsonStr);
+                            JSONArray info = jsonObj.getJSONArray("data");
+                            for (int i = 0; i < info.length(); i++) {
+                                JSONObject c = info.getJSONObject(i);
+                                message = "Login para " + userid;
+                                isSuccess = true;
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("usu", userid);
+                                editor.putString("id", c.getString("IDUsuario"));
+                                editor.putString("desc", c.getString("descricao"));
+                                editor.putString("email", c.getString("email"));
+                                editor.putString("foto_perfil", c.getString("caminho_imagem"));
+                                editor.apply();
+                                Log.i("Feliperrella", sharedPref.getString("id", ""));
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Intent myIntent = new Intent(Login_Screen.this, Home_Screen.class);
+                                        View sharedImage = findViewById(R.id.logoSplash);
+                                        ActivityOptions activityOptions = (ActivityOptions) ActivityOptions.makeSceneTransitionAnimation(Login_Screen.this, sharedImage, "logo");
+                                        startActivity(myIntent, activityOptions.toBundle());
+                                    }
+                                });
+                            }
+                        }
+                        catch (Exception e){}
+
+                    }
+                         else {
                             message = "Usuario ou senha incorretos.";
                             isSuccess = false;
                         }

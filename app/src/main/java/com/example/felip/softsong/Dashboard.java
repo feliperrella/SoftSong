@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +22,7 @@ public class Dashboard extends Activity {
             Login_Screen.sharedPref = this.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
             usu = (TextView) findViewById(R.id.usu);
             perfil = (ImageView) findViewById(R.id.imageView5);
-            Glide.with(getApplicationContext()).load("http://192.168.15.17/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+            Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
             email = (TextView) findViewById(R.id.email);
             usuario =  findViewById(R.id.relativeUsu);
             logout = findViewById(R.id.relativeLogout);
@@ -40,7 +41,8 @@ public class Dashboard extends Activity {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     SharedPreferences.Editor editor = Login_Screen.sharedPref.edit();
                                     editor.clear();
-                                    editor.commit();
+                                    editor.apply();
+                                    Log.i("Feliperrella", Login_Screen.sharedPref.getString("id", ""));
                                     Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
                                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(i);
