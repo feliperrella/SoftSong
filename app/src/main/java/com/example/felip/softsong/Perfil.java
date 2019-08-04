@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,6 +20,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,7 +62,6 @@ public class Perfil extends Activity {
         Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
         getWindow().setEnterTransition(fade);
         getWindow().setExitTransition(fade);
-
         //ImageView back = (ImageView) findViewById(R.id.back);
         mypubs = (TextView) findViewById(R.id.pubs);
         follows = (TextView) findViewById(R.id.follows);
@@ -75,20 +77,14 @@ public class Perfil extends Activity {
                 TextView bio = findViewById(R.id.txtBio);
                 bio.setText(Login_Screen.sharedPref.getString("desc",""));
                 ImageView visibility = findViewById(R.id.visibility);
-                visibility.setImageResource(backs[(int) (3*Math.random())]);
+                //visibility.setImageResource(backs[(int) (3*Math.random())]);
             }
         };
         x.run();
 
         //final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
-        Thread t = new Thread(){
-            @Override
-            public void run() {
-                super.run();
+
                 Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
-            }
-        };
-        t.run();
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
         {
             @Override
@@ -135,15 +131,6 @@ public class Perfil extends Activity {
         });
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            Intent my = new Intent(Perfil.this, Home_Screen.class);
-            startActivity(my, ActivityOptions.makeSceneTransitionAnimation(Perfil.this).toBundle());
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
 
     public class GetMyFollows extends AsyncTask<String, String, String> {
         String message = "";
@@ -153,6 +140,7 @@ public class Perfil extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
+                    Log.i("Feliperrella", "http://" + HttpHandler.IP + "/MyPerfil.php?id=" + Login_Screen.sharedPref.getString("id",""));
                     String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/MyPerfil.php?id=" + Login_Screen.sharedPref.getString("id",""));
                     JSONObject jsonObject = new JSONObject(jsonStr);
                     JSONArray jsonArray = jsonObject.getJSONArray("data");

@@ -11,7 +11,6 @@
         android:id="@+id/cardView3"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        app:cardElevation="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -20,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:transitionName="logo"
-            android:background="@drawable/gradient_atualizado">
+            android:background="#fff">
 
 
         </android.support.constraint.ConstraintLayout>
@@ -38,7 +37,7 @@
         app:bmb_buttonEnum="simpleCircle"
         app:bmb_buttonPlaceEnum="buttonPlace_sc_5_1"
         app:bmb_hideDuration="500"
-        app:bmb_normalColor="#285FBA"
+        app:bmb_normalColor="#ebd3df"
         app:bmb_piecePlaceEnum="piecePlace_dot_5_1"
         app:bmb_showDuration="500"
         app:bmb_use3DTransformAnimation="true"
@@ -46,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/guideline10"
-        app:layout_constraintTop_toTopOf="@+id/guideline11"
+        app:layout_constraintTop_toTopOf="@+id/guideline8"
         app:layout_constraintVertical_bias="1.0" />
 
     <ListView
@@ -55,7 +54,7 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="45dp"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 

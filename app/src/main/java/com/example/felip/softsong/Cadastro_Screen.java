@@ -95,7 +95,6 @@ public class Cadastro_Screen extends Activity {
         btn = findViewById(R.id.btnCadas);
         Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
         getWindow().setEnterTransition(fade);
-        ConstraintLayout trans = findViewById(R.id.trans);
         txtNome = findViewById(R.id.txtNome);
         check = findViewById(R.id.check);
         tchau = findViewById(R.id.txtTchau);
@@ -119,7 +118,7 @@ public class Cadastro_Screen extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nome = txtNome.getText().toString();
+                /*nome = txtNome.getText().toString();
                 Email = txtEmail.getText().toString();
                 senha = txtSenha.getText().toString();
                 nm = txtNm.getText().toString();
@@ -134,13 +133,11 @@ public class Cadastro_Screen extends Activity {
                     resto();
                     Cadastra cadastra = new Cadastra();
                     cadastra.execute("");
-                }
+                }*/
+                Intent Home = new Intent(Cadastro_Screen.this, StartActivity.class);
+                startActivity(Home, ActivityOptions.makeSceneTransitionAnimation(Cadastro_Screen.this).toBundle());
             }
         });
-        an = (AnimationDrawable) trans.getBackground();
-        an.setEnterFadeDuration(4000);
-        an.setExitFadeDuration(4000);
-        an.start();
 
     }
 
@@ -238,7 +235,7 @@ public class Cadastro_Screen extends Activity {
                     @Override
                     public void run()
                     {
-                        Intent Home = new Intent(Cadastro_Screen.this, Home_Screen.class);
+                        Intent Home = new Intent(Cadastro_Screen.this, StartActivity.class);
                         startActivity(Home, ActivityOptions.makeSceneTransitionAnimation(Cadastro_Screen.this).toBundle());
                     }
                 }, 1400);

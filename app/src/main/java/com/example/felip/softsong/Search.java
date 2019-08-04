@@ -169,15 +169,6 @@ public class Search  extends Activity {
         }
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            Intent my = new Intent(Search.this, Home_Screen.class);
-            startActivity(my, ActivityOptions.makeSceneTransitionAnimation(Search.this).toBundle());
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
     public static String user;
     public static Bitmap caminho;
     public static String cami;

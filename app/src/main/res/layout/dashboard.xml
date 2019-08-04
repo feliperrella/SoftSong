@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient">
+    android:background="@drawable/image_visibility">
 
 
     <RelativeLayout
@@ -18,7 +18,8 @@
             android:layout_height="60dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginEnd="18dp"
             android:layout_marginRight="15dp" />
 
         <ScrollView
@@ -51,7 +52,7 @@
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginLeft="15dp"
                     android:elevation="8dp"
-                    app:cardCornerRadius="15dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
 
 
@@ -65,20 +66,20 @@
                         <android.support.constraint.Guideline
                             android:id="@+id/guideline19"
                             android:layout_width="wrap_content"
-                            app:layout_constraintGuide_percent="0.75"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            app:layout_constraintGuide_begin="20dp" />
+                            app:layout_constraintGuide_begin="20dp"
+                            app:layout_constraintGuide_percent="0.75" />
 
                         <ImageView
                             android:id="@+id/imageView6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="94dp"
+                            android:layout_height="108dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:background="@drawable/dash_usu"
+                            android:background="@drawable/dah_usu"
                             app:layout_constraintBottom_toTopOf="@+id/guideline19"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -92,8 +93,9 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Update User"
-                            android:textSize="20dp"
+                            android:text="Editar informações"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -114,7 +116,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="250dp"
                     android:elevation="8dp"
-                    app:cardCornerRadius="15dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
 
 
@@ -148,7 +150,8 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
                             android:text="Logout"
-                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            android:textSize="15dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -156,11 +159,11 @@
 
                         <android.support.constraint.Guideline
                             android:id="@+id/guideline21"
-                            app:layout_constraintGuide_percent="0.75"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            app:layout_constraintGuide_begin="20dp" />
+                            app:layout_constraintGuide_begin="20dp"
+                            app:layout_constraintGuide_percent="0.75" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -176,7 +179,7 @@
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginRight="15dp"
                     android:elevation="8dp"
-                    app:cardCornerRadius="15dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
 
                     <android.support.constraint.ConstraintLayout
@@ -208,8 +211,9 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Configs"
-                            android:textSize="20dp"
+                            android:text="Configuracoes"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -217,11 +221,11 @@
 
                         <android.support.constraint.Guideline
                             android:id="@+id/guideline20"
-                            app:layout_constraintGuide_percent="0.75"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            app:layout_constraintGuide_begin="20dp" />
+                            app:layout_constraintGuide_begin="20dp"
+                            app:layout_constraintGuide_percent="0.75" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -238,7 +242,7 @@
                     android:layout_marginTop="250dp"
                     android:layout_marginRight="15dp"
                     android:elevation="8dp"
-                    app:cardCornerRadius="15dp"
+                    app:cardCornerRadius="10dp"
                     app:cardElevation="10dp">
 
                     <android.support.constraint.ConstraintLayout
@@ -270,8 +274,9 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:text="Notifications"
-                            android:textSize="20dp"
+                            android:text="Notificaçoes"
+                            android:textSize="15dp"
+                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -281,9 +286,9 @@
                             android:id="@+id/guideline22"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:layout_constraintGuide_percent="0.75"
                             android:orientation="horizontal"
-                            app:layout_constraintGuide_begin="20dp" />
+                            app:layout_constraintGuide_begin="20dp"
+                            app:layout_constraintGuide_percent="0.75" />
 
                     </android.support.constraint.ConstraintLayout>
 
@@ -302,7 +307,7 @@
             android:layout_marginLeft="25dp"
             android:text="feliperrella"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ffffff"
+            android:textColor="#6e6b6f"
             android:textSize="23sp"
             android:typeface="sans" />
 
@@ -314,7 +319,7 @@
             android:layout_alignStart="@+id/usu"
             android:text="felipe.perrella2210@gmail.com"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#ffffff" />
+            android:textColor="#6b6e6f" />
 
     </RelativeLayout>
 

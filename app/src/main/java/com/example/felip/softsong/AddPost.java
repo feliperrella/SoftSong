@@ -51,13 +51,12 @@ import java.util.Date;
 import static com.example.felip.softsong.Cadastro_Screen.image;
 
 
-public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListener {
+public class AddPost extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_post);
         Button postar = findViewById(R.id.btn_postar);
-        ImageView add = findViewById(R.id.addarq);
         desc = findViewById(R.id.desc);
         postar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,30 +65,12 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
             }
         });
         viewPager = findViewById(R.id.files);
-        add.setOnClickListener(new View.OnClickListener() {
+        ((ImageView) findViewById(R.id.pic)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowPopup(view);
-            }
-        });
-    }
-
-    public void ShowPopup(View v)
-    {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.menu_post);
-        popup.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        File PictureDirectory;
-        Uri data;
-        Intent Photopicker;
-        switch (menuItem.getItemId())
-        {
-            case R.id.pic:
+                File PictureDirectory;
+                Uri data;
+                Intent Photopicker;
                 Photopicker = new Intent(Intent.ACTION_PICK);
                 PictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
                 pictureDirectoryPath = PictureDirectory.getPath();
@@ -97,8 +78,15 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                 data = Uri.parse(pictureDirectoryPath);
                 Photopicker.setDataAndType(data, "image/*");
                 startActivityForResult(Photopicker, IMAGE_GALLEY_REQUEST);
-                return true;
-            case R.id.video:
+            }
+        });
+
+        ((ImageView) findViewById(R.id.video)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File PictureDirectory;
+                Uri data;
+                Intent Photopicker;
                 Photopicker = new Intent(Intent.ACTION_PICK);
                 PictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
                 pictureDirectoryPath = PictureDirectory.getPath();
@@ -106,8 +94,15 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                 data = Uri.parse(pictureDirectoryPath);
                 Photopicker.setDataAndType(data, "video/*");
                 startActivityForResult(Photopicker, VIDEO_GALLEY_REQUEST);
-                return true;
-            case R.id.audio:
+
+            }
+        });
+        ((ImageView) findViewById(R.id.audio)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File PictureDirectory;
+                Uri data;
+                Intent Photopicker;
                 Photopicker = new Intent(Intent.ACTION_PICK);
                 PictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC);
                 pictureDirectoryPath = PictureDirectory.getPath();
@@ -115,8 +110,14 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                 data = Uri.parse(pictureDirectoryPath);
                 Photopicker.setDataAndType(data, "audio/*");
                 startActivityForResult(Photopicker, AUDIO_GALLEY_REQUEST);
-                return true;
-            case R.id.doc:
+            }
+        });
+        ((ImageView) findViewById(R.id.doc)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                File PictureDirectory;
+                Uri data;
+                Intent Photopicker;
                 Photopicker = new Intent(Intent.ACTION_PICK);
                 PictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
                 pictureDirectoryPath = PictureDirectory.getPath();
@@ -124,10 +125,8 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
                 data = Uri.parse(pictureDirectoryPath);
                 Photopicker.setDataAndType(data, "*/*");
                 startActivityForResult(Photopicker, ARCHIVE_GALLEY_REQUEST);
-                return true;
-                default:
-                    return false;
-        }
+            }
+        });
     }
 
     @Override
@@ -355,14 +354,6 @@ public class AddPost extends Activity implements PopupMenu.OnMenuItemClickListen
             super.onPostExecute(s);
             Toast.makeText(AddPost.this, "Post adicionado com sucesso", Toast.LENGTH_LONG).show();
         }
-    }
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            Intent my = new Intent(AddPost.this, Home_Screen.class);
-            startActivity(my, ActivityOptions.makeSceneTransitionAnimation(AddPost.this).toBundle());
-        }
-
-        return super.onKeyDown(keyCode, event);
     }
 
 

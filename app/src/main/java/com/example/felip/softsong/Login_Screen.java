@@ -44,7 +44,6 @@ public class Login_Screen extends AppCompatActivity {
     TextView txtLogin, txtSenha, txtCadastro, text;
     static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
     public static SharedPreferences sharedPref;
-    ProgressBar progressBar;
     ImageView lg, sn, logo;
 
     @Override
@@ -56,7 +55,7 @@ public class Login_Screen extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_login_screen);
-        WaveView waveView = findViewById(R.id.wave);
+        //WaveView waveView = findViewById(R.id.wave);
         Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
         getWindow().setExitTransition(fade);
             sharedPref = this.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
@@ -164,25 +163,25 @@ public class Login_Screen extends AppCompatActivity {
                 txtCadastro.startAnimation(animation);
                 txtCadastro.setVisibility(VISIBLE);
             }
-        }, 1400);
-        WaveHelper = new WaveHelper(waveView);
-        waveView.setShapeType(WaveView.ShapeType.SQUARE);
-        waveView.setWaveColor(
-                Color.parseColor("#B079E1"),
-                Color.parseColor("#285FBAE6"));
+        }, 800);
+        //WaveHelper = new WaveHelper(waveView);
+        //waveView.setShapeType(WaveView.ShapeType.SQUARE);
+        //waveView.setWaveColor(
+                //Color.parseColor("#B079E1"),
+                //Color.parseColor("#285FBAE6"));
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        WaveHelper.cancel();
+        //WaveHelper.cancel();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        WaveHelper.start();
+        //WaveHelper.start();
     }
 
 

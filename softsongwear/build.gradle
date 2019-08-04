@@ -34,7 +34,6 @@ dependencies {
     implementation ('com.github.florent37:davinci:1.0.3@aar'){
         transitive = true
     }
-    implementation files('/Users/feliperrella/Documents/SoftSong/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.jar')
     implementation fileTree(include: ['/Users/feliperrella/Documents/SoftSong/mysql-connector-java-5.1.47-bin/mysql-connector-java-5.1.47-bin.jar'], dir: 'libs')
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

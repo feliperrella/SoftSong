@@ -107,10 +107,11 @@ public class atualizar_perfil extends Activity {
             try {
             HttpHandler sh = new HttpHandler();
             String jsonStr = sh.makeServiceCall("http://" + HttpHandler.IP + "/loadInfo.php?id=" + Login_Screen.sharedPref.getString("id", ""));
+            Log.i("Feliperrella", jsonStr);
             if(jsonStr != null)
                 {
                     JSONObject jsonObject = new JSONObject(jsonStr);
-                    final JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    final JSONArray jsonArray = jsonObject.getJSONArray("info");
                     Thread thread = new Thread(){
                         @Override
                         public void run() {
@@ -137,6 +138,8 @@ public class atualizar_perfil extends Activity {
             }
             return null;
         }
+
+
     }
 
     class update extends AsyncTask<String,String,String>

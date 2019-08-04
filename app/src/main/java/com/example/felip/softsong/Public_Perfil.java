@@ -71,7 +71,7 @@ public class Public_Perfil extends Activity{
                 ViewPager pager = (ViewPager) findViewById(R.id.segbio);
                 pager.setAdapter(adapter);
                 ImageView visibility = findViewById(R.id.visibility);
-                visibility.setImageResource(backs[(int) (3*Math.random())]);
+                //visibility.setImageResource(backs[(int) (3*Math.random())]);
             }
         };
         x.run();
@@ -192,8 +192,8 @@ public class Public_Perfil extends Activity{
                         a = (rs.getString("Count(*)"));
                         b = (rs.getString("seguindo"));
                         c = (rs.getString("seguidores"));
-                        d = (rs.getString("bloqueado"));
-                        e = (rs.getString("sigo"));
+                        d = (rs.getInt("bloqueado"));
+                        e = (rs.getInt("sigo"));
                         f = (rs.getString("descr"));
                         h = (rs.getString("nome"));
                         runOnUiThread(new Runnable() {
@@ -232,21 +232,18 @@ public class Public_Perfil extends Activity{
             TextView bio = findViewById(R.id.txtBio);
             bio.setText(f);
             final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadein);
-            if(d != "0")
+            if(d != 0)
             {
-                if(d != "null") {
                     bloquear.startAnimation(animation);
                     bloquear.setText("B L O Q U E A D O");
                     seguir.setEnabled(false);
-                    seguir.setBackgroundColor(Color.parseColor("#BDCCC2"));
-                }
             }
-            if(e != "0")
+            if(e != 0)
             {
-                if(d != "null") {
+
                     seguir.startAnimation(animation);
                     seguir.setText("S E G U I N D O");
-                }
+
             }
 
         }
@@ -285,5 +282,6 @@ public class Public_Perfil extends Activity{
     TextView mypubs, follows, followings, nome;
     Button seguir, bloquear;
     LinearLayout bt0, bt1, bt2;
-    String a,b,c,d,e,f,h;
+    String a,b,c,f,h;
+    int d,e;
 }

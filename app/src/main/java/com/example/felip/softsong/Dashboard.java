@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +21,10 @@ import com.bumptech.glide.Glide;
 public class Dashboard extends Activity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }
             setContentView(R.layout.dashboard);
             Login_Screen.sharedPref = this.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
             usu = (TextView) findViewById(R.id.usu);

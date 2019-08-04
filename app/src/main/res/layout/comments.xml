@@ -41,7 +41,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:background="@drawable/gradient_atualizado">
+                    android:background="@drawable/image_visibility">
 
                     <ImageView
                         android:id="@+id/send"

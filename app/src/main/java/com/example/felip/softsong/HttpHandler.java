@@ -15,7 +15,7 @@ import java.net.URL;
 public class HttpHandler {
 
     private static final String TAG = HttpHandler.class.getSimpleName();
-    public static String IP = "192.168.15.17";
+    public static String IP = "192.168.1.142:81/teste";
 
     public HttpHandler() {
     }
@@ -30,7 +30,7 @@ public class HttpHandler {
             InputStream in = new BufferedInputStream(conn.getInputStream());
             response = convertStreamToString(in);
         } catch (Exception e) {
-            Log.e(TAG, "MalformedURLException: " + e.getMessage());
+            Log.e(TAG, "URL mal formada " + e.getMessage());
         }
         return response;
     }

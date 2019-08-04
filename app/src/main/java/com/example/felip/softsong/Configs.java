@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -18,8 +19,8 @@ public class Configs extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.configs);
-        RelativeLayout about = (RelativeLayout) findViewById(R.id.about);
-        RelativeLayout kill =  (RelativeLayout) findViewById(R.id.delete);
+        ImageView about = findViewById(R.id.about);
+        ImageView kill =  findViewById(R.id.delete);
 
 
         kill.setOnClickListener(new View.OnClickListener() {

@@ -55,7 +55,7 @@ public class Home_Screen extends Activity{
                 //new Not().execute();
                 bmb = findViewById(R.id.bmb);
                 for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
-                    SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder().normalImageRes(picId[i]).listener(new OnBMClickListener() {
+                    SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder().normalImageRes(picId[i]).normalColor(color[i]).listener(new OnBMClickListener() {
                         @Override
                         public void onBoomButtonClick(final int index) {
                             BoomButton b;
@@ -135,6 +135,12 @@ public class Home_Screen extends Activity{
         super.onDestroy();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new PostDeals.GetMyPosts(this, posts, "all").execute();
+    }
+
     public static int sub;
     ImageView noti;
     ListView posts;
@@ -143,6 +149,7 @@ public class Home_Screen extends Activity{
     GoogleApiClient mGoogleApiClient;
     String NodeID;
     int[] picId = {R.drawable.ico_uso, R.drawable.ico_mais,R.drawable.ico_search, R.drawable.ic_send, R.drawable.watch};
+    int[] color = {Color.parseColor("#ebd3df"), Color.parseColor("#cae3f2"), Color.parseColor("#ebd3df"), Color.parseColor("#cae3f2"), Color.parseColor("#cae3f2")};
 }
 
 
