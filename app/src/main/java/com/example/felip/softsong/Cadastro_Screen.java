@@ -118,7 +118,7 @@ public class Cadastro_Screen extends Activity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*nome = txtNome.getText().toString();
+                nome = txtNome.getText().toString();
                 Email = txtEmail.getText().toString();
                 senha = txtSenha.getText().toString();
                 nm = txtNm.getText().toString();
@@ -133,9 +133,8 @@ public class Cadastro_Screen extends Activity {
                     resto();
                     Cadastra cadastra = new Cadastra();
                     cadastra.execute("");
-                }*/
-                Intent Home = new Intent(Cadastro_Screen.this, StartActivity.class);
-                startActivity(Home, ActivityOptions.makeSceneTransitionAnimation(Cadastro_Screen.this).toBundle());
+                }
+
             }
         });
 
