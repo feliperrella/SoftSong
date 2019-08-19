@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.gelitenight.waveview.library.WaveView;
 
 import org.json.JSONArray;
@@ -224,6 +225,8 @@ public class Login_Screen extends AppCompatActivity {
                                         View sharedImage = findViewById(R.id.logoSplash);
                                         ActivityOptions activityOptions = (ActivityOptions) ActivityOptions.makeSceneTransitionAnimation(Login_Screen.this, sharedImage, "logo");
                                         startActivity(myIntent, activityOptions.toBundle());
+                                        Glide.get(getApplicationContext()).clearMemory();
+
                                     }
                                 });
                             }

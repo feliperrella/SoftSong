@@ -161,6 +161,7 @@ public class atualizar_perfil extends Activity {
                     new HTTPServer(newpath + "-" + file.getName(), encodedImage).execute();
                     editor.putString("foto_perfil", newpath + "-" + file.getName());
                     editor.apply();
+                    Glide.get(getApplicationContext()).clearMemory();
                     sh.makeServiceCall("http://" + HttpHandler.IP + "/updateUser.php?id=" + Login_Screen.sharedPref.getString("id", "") +  "&user=" + user.getText() + "&nome=" + nome.getText() + "&email=" + email.getText() + "&senha=" + senha.getText() +  "&telefone=" + email.getText() + "&caminho_imagem=" + Login_Screen.sharedPref.getString("foto_perfil", "") + "&descricao=" + bio.getText());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -172,7 +173,6 @@ public class atualizar_perfil extends Activity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Toast.makeText(getApplicationContext(), "Informaçoes atualizadas com sucesso", Toast.LENGTH_LONG).show();
-            Glide.get(getApplicationContext()).clearMemory();
         }
     }
     static Bitmap image;

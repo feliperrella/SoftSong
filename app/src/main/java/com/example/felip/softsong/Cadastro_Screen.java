@@ -37,6 +37,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,16 +60,12 @@ import static android.view.View.VISIBLE;
 public class Cadastro_Screen extends Activity {
 
     static final int IMAGE_GALLEY_REQUEST = 20;
-    static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 0;
     String pictureDirectoryPath;
     public static String sftpCaminho;
     public static File file;
-    public ImageView img;
+    ImageView img;
     public InputStream inputstream;
-    String query;
-    ResultSet rs;
     public static int count;
-    public static String Destino;
     TextView txtNome;
     TextView txtEmail;
     TextView txtSenha, txtNm, tchau;
@@ -76,11 +74,7 @@ public class Cadastro_Screen extends Activity {
     CheckView check;
     String senha;
     String Email;
-    int countt;
-    String Verifica_Email;
-    String Verifica_User;
     public static Bitmap image;
-    AnimationDrawable an;
     CardView btn;
 
     @Override
@@ -95,6 +89,7 @@ public class Cadastro_Screen extends Activity {
         btn = findViewById(R.id.btnCadas);
         Fade fade = (Fade) TransitionInflater.from(this).inflateTransition(R.transition.fade);
         getWindow().setEnterTransition(fade);
+        img = findViewById(R.id.imagedocad);
         txtNome = findViewById(R.id.txtNome);
         check = findViewById(R.id.check);
         tchau = findViewById(R.id.txtTchau);
@@ -102,10 +97,10 @@ public class Cadastro_Screen extends Activity {
         txtNm = findViewById(R.id.txtNm);
         txtEmail = findViewById(R.id.txtEmail);
         txtSenha = findViewById(R.id.txtSenha);
-        img = findViewById(R.id.imagedocad);
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("Feliperrella", "a");
                 Intent Photopicker = new Intent(Intent.ACTION_PICK);
                 File PictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
                 pictureDirectoryPath = PictureDirectory.getPath();
@@ -205,6 +200,8 @@ public class Cadastro_Screen extends Activity {
                         Log.i("Feliperrella", Login_Screen.sharedPref.getString("usu",""));
                     }
                     new HTTPServer((idd) + "." + FilenameUtils.getExtension(String.valueOf(file)), encodedImage).execute();
+                    Glide.get(getApplicationContext()).clearMemory();
+
 
                 } catch (Exception e) {
                     System.out.println(e.getMessage().toString());

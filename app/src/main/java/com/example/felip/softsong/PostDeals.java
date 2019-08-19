@@ -642,7 +642,7 @@ public class PostDeals {
                             public void run() {
                                 super.run();
                                 try {
-                                    sh.makeServiceCall("http://" + HttpHandler.IP + "/addComment.php?id=" + (Login_Screen.sharedPref.getString("id", "")) + "&post=" + idhere + "&comment=" + come + "&date=" + dateFormat.format(date));
+                                    sh.makeServiceCall("http://" + HttpHandler.IP + "/addComment.php?id=" + (Login_Screen.sharedPref.getString("id", "")) + "&post=" + idhere + "&comment=" + come);
                                     new getComments("get", idhere, l, contextx, come).execute();
                                 }
                                 catch (Exception e){}
