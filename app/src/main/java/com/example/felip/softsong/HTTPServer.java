@@ -48,7 +48,7 @@ public class HTTPServer extends AsyncTask <Void, Void, Void> {
     public void onPostExecute(Void aVoid)
     {
         super.onPostExecute(aVoid);
-        System.out.println("FOI PORRA");
+        System.out.println("FOI");
     }
 
     private HttpParams getHttpRequestParams()

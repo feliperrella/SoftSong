@@ -307,7 +307,7 @@
             android:layout_marginLeft="25dp"
             android:text="feliperrella"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#6e6b6f"
+            android:textColor="#fff"
             android:textSize="23sp"
             android:typeface="sans" />
 
@@ -319,7 +319,7 @@
             android:layout_alignStart="@+id/usu"
             android:text="felipe.perrella2210@gmail.com"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#6b6e6f" />
+            android:textColor="#fff" />
 
     </RelativeLayout>
 

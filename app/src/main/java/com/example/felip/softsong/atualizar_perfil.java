@@ -162,7 +162,8 @@ public class atualizar_perfil extends Activity {
                     editor.putString("foto_perfil", newpath + "-" + file.getName());
                     editor.apply();
                     Glide.get(getApplicationContext()).clearMemory();
-                    sh.makeServiceCall("http://" + HttpHandler.IP + "/updateUser.php?id=" + Login_Screen.sharedPref.getString("id", "") +  "&user=" + user.getText() + "&nome=" + nome.getText() + "&email=" + email.getText() + "&senha=" + senha.getText() +  "&telefone=" + email.getText() + "&caminho_imagem=" + Login_Screen.sharedPref.getString("foto_perfil", "") + "&descricao=" + bio.getText());
+                    String call = "http://" + HttpHandler.IP + "/updateUser.php?id=" + Login_Screen.sharedPref.getString("id", "") +  "&user=" + user.getText() + "&nome=" + nome.getText() + "&email=" + email.getText() + "&senha=" + senha.getText() +  "&telefone=" + email.getText() + "&caminho_imagem=" + Login_Screen.sharedPref.getString("foto_perfil", "") + "&descricao=" + bio.getText();
+                    sh.makeServiceCall(call);
             } catch (Exception e) {
                 e.printStackTrace();
             }

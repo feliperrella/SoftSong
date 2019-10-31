@@ -27,6 +27,8 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.StringSignature;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -175,7 +177,7 @@ public class PostDeals {
             };
             t.run();
             indicator = view.findViewById(R.id.indicator);
-            Glide.with(view.getContext()).load("http://192.168.15.17/pictures/" + picture.get(i)).into(holder.perfil);
+            Glide.with(view.getContext()).load("http://" + HttpHandler.IP + "/pictures/" + picture.get(i)).signature(new StringSignature(String.valueOf(System.currentTimeMillis()))).into(holder.perfil);
             holder.nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
             holder.com.setImageResource(R.drawable.comment);
             if(likou.get(i).equals("1"))
