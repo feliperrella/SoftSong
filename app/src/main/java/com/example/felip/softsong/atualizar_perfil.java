@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -57,7 +58,7 @@ public class atualizar_perfil extends Activity {
             @Override
             public void run() {
                 super.run();
-                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).placeholder(R.drawable.ico_uso).into(perfil);
             }
         };
         foto.run();
@@ -158,8 +159,11 @@ public class atualizar_perfil extends Activity {
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     image.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
                     String encodedImage = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-                    new HTTPServer(newpath + "-" + file.getName(), encodedImage).execute();
-                    editor.putString("foto_perfil", newpath + "-" + file.getName());
+
+                    //new HTTPServer(newpath + "-" + file.getName(), encodedImage).execute();
+                sh.makeServiceCall("http://" + HttpHandler.IP + "/SavePicture.php?name=" + newpath + "-" + file.getName() + "&image=" + encodedImage);
+
+                editor.putString("foto_perfil", newpath + "-" + file.getName());
                     editor.apply();
                     Glide.get(getApplicationContext()).clearMemory();
                     String call = "http://" + HttpHandler.IP + "/updateUser.php?id=" + Login_Screen.sharedPref.getString("id", "") +  "&user=" + user.getText() + "&nome=" + nome.getText() + "&email=" + email.getText() + "&senha=" + senha.getText() +  "&telefone=" + email.getText() + "&caminho_imagem=" + Login_Screen.sharedPref.getString("foto_perfil", "") + "&descricao=" + bio.getText();

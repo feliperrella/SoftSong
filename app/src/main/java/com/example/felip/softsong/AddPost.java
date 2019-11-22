@@ -32,6 +32,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -325,7 +326,8 @@ public class AddPost extends Activity {
                                         Date date = new Date();
                                         sh.makeServiceCall("http://" + HttpHandler.IP + "/addPost.php?id=" + Login_Screen.sharedPref.getString("id","") + "&desc=" + desc.getText() + "&date=" + dateFormat.format(date) + "&path=" + path + "&final=" + finalI);
                                         System.out.println(finalI);
-                                        new HTTPServer(path, base64File[0]).execute();
+                                        sh.makeServiceCall("http://" + HttpHandler.IP + "/SavePicture.php?name=" + path + "&image=" + base64File[0]);
+                                        //new HTTPServer(path, base64File[0]).execute();
                                     }
                                     catch (Exception e){}
                                 }

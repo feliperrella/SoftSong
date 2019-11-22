@@ -99,7 +99,7 @@ public class Seguidores_Seguidos extends Activity {
                 @Override
                 public void onClick(View view) {
                     Search.user = (String) usu.getText();
-                    Search.cami = "http://" + HttpHandler.IP + "/pictures/" + foto.get(i);
+                    Search.cami = "http://" + HttpHandler.Media + "/pictures/" + foto.get(i);
                     //Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
                     Intent my = new Intent(Seguidores_Seguidos.this, Public_Perfil.class);
                     startActivity(my);
@@ -108,7 +108,7 @@ public class Seguidores_Seguidos extends Activity {
             try {
                 nome.setText(name.get(i));
                 usu.setText(user.get(i));
-                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + foto.get(i)).into(per);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + foto.get(i)).into(per);
             }
             catch (Exception e){}
             return vieww;

@@ -13,14 +13,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.transition.Fade;
@@ -45,17 +43,21 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import cdflynn.android.library.checkview.CheckView;
 
+
+
 import static android.view.View.VISIBLE;
+import static java.lang.System.getProperties;
 
 public class Cadastro_Screen extends Activity {
 
@@ -145,6 +147,10 @@ public class Cadastro_Screen extends Activity {
                 sftpCaminho = data.getData().getPath().substring(5);
                 file = new File(sftpCaminho);
                 try {
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
 
                     //Toast.makeText(Cadastro.this, data.getData().getPath(), Toast.LENGTH_SHORT).show();
                     inputstream = getContentResolver().openInputStream(data.getData());
@@ -199,8 +205,9 @@ public class Cadastro_Screen extends Activity {
                         editor.apply();
                         Log.i("Feliperrella", Login_Screen.sharedPref.getString("usu",""));
                     }
-                    new HTTPServer((idd) + "." + FilenameUtils.getExtension(String.valueOf(file)), encodedImage).execute();
+//                    new HTTPServer((idd) + "." + FilenameUtils.getExtension(String.valueOf(file)), encodedImage).execute();
                     Glide.get(getApplicationContext()).clearMemory();
+                    sh.makeServiceCall("http://" + HttpHandler.IP + "/SavePicture.php?name=" + (idd) + "." + "jpg" + "&image=" + encodedImage);
 
 
                 } catch (Exception e) {
@@ -266,11 +273,20 @@ public class Cadastro_Screen extends Activity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         pb.setAlpha(1f);
-                        pb.getIndeterminateDrawable().setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.SRC_IN);
+                        pb.getIndeterminateDrawable().setColorFilter(Color.parseColor("#a9a9a9"), PorterDuff.Mode.SRC_IN);
                         pb.setVisibility(VISIBLE);
                     }
                 })
                 .start();
     }
+
+
+
+
+    private static final String APPLICATION_NAME_PROPERTY = "Softsong.app";
+    private static final String ACCOUNT_ID_PROPERTY = "103357459842356917481";
+    private static final String PRIVATE_KEY_PATH_PROPERTY = "0c87ec373a714643023a180a4548b32e3df1fc7e";
+
+
     String idd = "";
     }

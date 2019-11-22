@@ -84,7 +84,7 @@ public class Perfil extends Activity {
 
         //final Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
 
-                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(1, LinearLayoutManager.VERTICAL)
         {
             @Override

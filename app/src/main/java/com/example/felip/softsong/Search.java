@@ -151,7 +151,7 @@ public class Search  extends Activity {
                 public void onClick(View view) {
                     user = (String) usu.getText();
                     try {
-                        cami = "http://" + HttpHandler.IP + "/pictures/" + ft[i];
+                        cami = "http://" + HttpHandler.Media + "/pictures/" + ft[i];
                     }
                     catch (Exception e){}
                     //Toast.makeText(getApplicationContext(), user, Toast.LENGTH_LONG).show();
@@ -162,7 +162,7 @@ public class Search  extends Activity {
             try {
                 name.setText(nm[i]);
                 usu.setText(pe[i]);
-                Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + ft[i]).into(per);
+                Glide.with(getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + ft[i]).into(per);
             }
             catch (Exception e){}
             return view;

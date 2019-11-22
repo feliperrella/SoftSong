@@ -177,7 +177,7 @@ public class PostDeals {
             };
             t.run();
             indicator = view.findViewById(R.id.indicator);
-            Glide.with(view.getContext()).load("http://" + HttpHandler.IP + "/pictures/" + picture.get(i)).signature(new StringSignature(String.valueOf(System.currentTimeMillis()))).into(holder.perfil);
+            Glide.with(view.getContext()).load("http://" + HttpHandler.Media + "/pictures/" + picture.get(i)).signature(new StringSignature(String.valueOf(System.currentTimeMillis()))).into(holder.perfil);
             holder.nlikes.setText(Integer.parseInt(curtir.get(i)) == 1 ? curtir.get(i) + " curtida" : curtir.get(i) + " curtidas");
             holder.com.setImageResource(R.drawable.comment);
             if(likou.get(i).equals("1"))
@@ -349,7 +349,7 @@ public class PostDeals {
                                             @Override
                                             public void run() {
                                                 super.run();
-                                                Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + imagess[position]).override(600, 200).into(images);
+                                                Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + imagess[position]).override(600, 200).into(images);
                                             }
                                         };
                                         x.run();
@@ -369,7 +369,7 @@ public class PostDeals {
                             final VideoView video = (VideoView) itemView.findViewById(R.id.imgvid);
                             try {
                                 if(!video.isPlaying()) {
-                                    Uri uri = Uri.parse("http://" + HttpHandler.IP + "/pictures/" + imagess[position]);
+                                    Uri uri = Uri.parse("http://" + HttpHandler.Media + "/pictures/" + imagess[position]);
                                     video.setVideoURI(uri);
                                 }
 
@@ -407,7 +407,7 @@ public class PostDeals {
                                 @Override
                                 public void run() {
                                     super.run();
-                                    mp[0] = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://" + HttpHandler.IP + "/pictures/" + imagess[position]));
+                                    mp[0] = (MediaPlayer) MediaPlayer.create(itemView.getContext(), Uri.parse("http://" + HttpHandler.Media + "/pictures/" + imagess[position]));
                                 }
                             };
                             x.run();
@@ -435,7 +435,7 @@ public class PostDeals {
                             pic.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    new DownloadFileFromURL("http://" + HttpHandler.IP + "/pictures/" + imagess[position], activity).execute();
+                                    new DownloadFileFromURL("http://" + HttpHandler.Media + "/pictures/" + imagess[position], activity).execute();
                                 }
                             });
                             Thread t = new Thread()
@@ -691,12 +691,12 @@ public class PostDeals {
             final TextView txt = view.findViewById(R.id.comm);
             final ImageView img = view.findViewById(R.id.perfilComment);
             final TextView hor = view.findViewById(R.id.commhor);
-            Glide.with(view.getContext()).load("http://" + HttpHandler.IP + "/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
+            Glide.with(view.getContext()).load("http://" + HttpHandler.Media + "/pictures/" + caminho_.get(i)).placeholder(R.drawable.ico_uso).into(img);
             Thread x = new Thread(){
                 @Override
                 public void run() {
                     super.run();
-                    String a = "http://"+ HttpHandler.IP + "/pictures/" + caminho_.get(i);
+                    String a = "http://"+ HttpHandler.Media + "/pictures/" + caminho_.get(i);
                     txt.setText(username.get(i) + ": " + comments.get(i));
                     hor.setText(data_horario.get(i));
                 }

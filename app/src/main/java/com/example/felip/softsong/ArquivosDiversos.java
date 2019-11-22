@@ -61,7 +61,7 @@ public class ArquivosDiversos {
                                 @Override
                                 public void run() {
                                     try {
-                                        Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + imagess[position]).into(images);
+                                        Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + imagess[position]).into(images);
                                     } catch (Exception e) {
                                         //Picasso.with(activity.getApplicationContext()).load(R.drawable.ops).placeholder(R.drawable.ops).into(images);
                                     }
@@ -70,7 +70,7 @@ public class ArquivosDiversos {
                             images.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + imagess[position]).into(images);
+                                    Glide.with(activity.getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + imagess[position]).into(images);
                                 }
                             });
                             thread.run();
@@ -84,7 +84,7 @@ public class ArquivosDiversos {
                             final VideoView video = (VideoView) itemView.findViewById(R.id.imgvid);
                             try {
                                 if(!video.isPlaying()) {
-                                    Uri uri = Uri.parse("http://" + HttpHandler.IP + "/pictures/" + imagess[position]);
+                                    Uri uri = Uri.parse("http://" + HttpHandler.Media + "/pictures/" + imagess[position]);
                                     video.setVideoURI(uri);
                                 }
 

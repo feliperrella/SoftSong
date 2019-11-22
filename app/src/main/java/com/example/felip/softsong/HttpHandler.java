@@ -16,6 +16,7 @@ public class HttpHandler {
 
     private static final String TAG = HttpHandler.class.getSimpleName();
     public static String IP = "35.229.108.103/mobile";
+    public static String Media = "35.229.108.103";
 
     public HttpHandler() {
     }

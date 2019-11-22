@@ -117,7 +117,7 @@ public class Home_Screen extends Activity{
                     bmb.addBuilder(builder);
                     bmb.bringToFront();
                 }
-                Glide.with(this).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).asBitmap().into(new SimpleTarget<Bitmap>() {
+                Glide.with(this).load("http://" + HttpHandler.Media + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).asBitmap().into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         b = resource;

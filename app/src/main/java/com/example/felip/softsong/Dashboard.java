@@ -29,7 +29,7 @@ public class Dashboard extends Activity {
             Login_Screen.sharedPref = this.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
             usu = (TextView) findViewById(R.id.usu);
             perfil = (ImageView) findViewById(R.id.imageView5);
-            Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+            Glide.with(getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
             email = (TextView) findViewById(R.id.email);
             usuario =  findViewById(R.id.relativeUsu);
             logout = findViewById(R.id.relativeLogout);

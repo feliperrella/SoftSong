@@ -24,7 +24,7 @@ public class Chats_Index extends Activity {
         perfil = findViewById(R.id.perfil);
         perfilID = findViewById(R.id.idUsuario);
         perfilID.setText(Login_Screen.sharedPref.getString("usu",""));
-        Glide.with(getApplicationContext()).load("http://" + HttpHandler.IP + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
+        Glide.with(getApplicationContext()).load("http://" + HttpHandler.Media + "/pictures/" + Login_Screen.sharedPref.getString("foto_perfil","")).into(perfil);
     }
     ImageView perfil;
     TextView perfilID;
